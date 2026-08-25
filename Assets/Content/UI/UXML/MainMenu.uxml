@@ -1,0 +1,28 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements">
+    <Style src="project://database/Assets/Content/UI/USS/MenuStyles.uss?fileID=7433441132597879392&amp;guid=ac9964ffdf75194439f257a5facebd73&amp;type=3#MenuStyles" />
+    <ui:VisualElement name="Root" class="menu-root">
+        <ui:VisualElement name="MainPanel" class="menu-panel">
+            <ui:Label text="Your Game Title" class="menu-title" />
+            <ui:Button name="StartButton" text="Start" class="menu-button" />
+            <ui:Button name="SettingsButton" text="Settings" class="menu-button" />
+            <ui:Button name="ControlsButton" text="Controls" class="menu-button" />
+            <ui:Button name="QuitButton" text="Quit" class="menu-button menu-button-danger" />
+        </ui:VisualElement>
+
+        <ui:VisualElement name="SettingsPanel" class="menu-panel menu-panel-hidden">
+            <ui:Label text="Settings" class="menu-title" />
+            <ui:Label text="Master volume" class="menu-label" />
+            <ui:Slider name="MasterVolumeSlider" low-value="0" high-value="1" value="0.5" />
+            <ui:Button name="SettingsBackButton" text="Back" class="menu-button" />
+        </ui:VisualElement>
+
+        <ui:VisualElement name="ControlsPanel" class="menu-panel menu-panel-hidden">
+            <ui:Label text="Controls" class="menu-title" />
+            <ui:Label text="Move: WASD / Arrow keys" class="menu-label" />
+            <ui:Label text="Pause: Escape" class="menu-label" />
+            <ui:Label text="Confirm: Enter / Left click" class="menu-label" />
+            <ui:Label text="Replace this list with your final bindings." class="menu-hint" />
+            <ui:Button name="ControlsBackButton" text="Back" class="menu-button" />
+        </ui:VisualElement>
+    </ui:VisualElement>
+</ui:UXML>

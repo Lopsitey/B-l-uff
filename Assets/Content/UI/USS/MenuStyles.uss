@@ -1,0 +1,72 @@
+.menu-root {
+    flex-grow: 1;
+    align-items: center;
+    justify-content: center;
+    background-color: rgb(18, 18, 24);
+}
+
+.menu-panel {
+    width: 420px;
+    padding: 24px;
+    border-radius: 12px;
+    background-color: rgb(30, 30, 40);
+    align-items: stretch;
+}
+
+.menu-panel-hidden {
+    display: none;
+}
+
+.menu-title {
+    -unity-font-style: bold;
+    font-size: 28px;
+    color: rgb(240, 240, 245);
+    margin-bottom: 16px;
+    -unity-text-align: middle-center;
+}
+
+.menu-label {
+    font-size: 16px;
+    color: rgb(210, 210, 220);
+    margin-bottom: 8px;
+}
+
+.menu-hint {
+    font-size: 13px;
+    color: rgb(150, 150, 165);
+    margin-bottom: 12px;
+    white-space: normal;
+}
+
+.menu-button {
+    height: 40px;
+    margin-top: 8px;
+    border-radius: 8px;
+    background-color: rgb(70, 110, 180);
+    color: white;
+    font-size: 16px;
+}
+
+.menu-button:hover {
+    background-color: rgb(90, 130, 210);
+}
+
+.menu-button-danger {
+    background-color: rgb(150, 60, 60);
+}
+
+.pause-root {
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.65);
+    align-items: center;
+    justify-content: center;
+}
+
+.pause-panel {
+    border-width: 1px;
+    border-color: rgb(80, 80, 100);
+}

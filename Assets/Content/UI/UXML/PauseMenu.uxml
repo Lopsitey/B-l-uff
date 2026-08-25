@@ -1,0 +1,28 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements">
+    <Style src="project://database/Assets/Content/UI/USS/MenuStyles.uss?fileID=7433441132597879392&amp;guid=ac9964ffdf75194439f257a5facebd73&amp;type=3#MenuStyles" />
+    <ui:VisualElement name="PauseRoot" class="pause-root">
+        <ui:VisualElement name="PausePanel" class="menu-panel pause-panel">
+            <ui:Label text="Paused" class="menu-title" />
+            <ui:Button name="ResumeButton" text="Resume" class="menu-button" />
+            <ui:Button name="PauseSettingsButton" text="Settings" class="menu-button" />
+            <ui:Button name="PauseControlsButton" text="Controls" class="menu-button" />
+            <ui:Button name="MainMenuButton" text="Main menu" class="menu-button" />
+            <ui:Button name="PauseQuitButton" text="Quit" class="menu-button menu-button-danger" />
+        </ui:VisualElement>
+
+        <ui:VisualElement name="PauseSettingsPanel" class="menu-panel menu-panel-hidden pause-panel">
+            <ui:Label text="Settings" class="menu-title" />
+            <ui:Label text="Master volume" class="menu-label" />
+            <ui:Slider name="PauseMasterVolumeSlider" low-value="0" high-value="1" value="0.5" />
+            <ui:Button name="PauseSettingsBackButton" text="Back" class="menu-button" />
+        </ui:VisualElement>
+
+        <ui:VisualElement name="PauseControlsPanel" class="menu-panel menu-panel-hidden pause-panel">
+            <ui:Label text="Controls" class="menu-title" />
+            <ui:Label text="Move: WASD / Arrow keys" class="menu-label" />
+            <ui:Label text="Pause: Escape" class="menu-label" />
+            <ui:Label text="Confirm: Enter / Left click" class="menu-label" />
+            <ui:Button name="PauseControlsBackButton" text="Back" class="menu-button" />
+        </ui:VisualElement>
+    </ui:VisualElement>
+</ui:UXML>
