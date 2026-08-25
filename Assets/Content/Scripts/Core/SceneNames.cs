@@ -7,5 +7,7 @@ namespace Template.Core
     {
         public const string MainMenu = "MainMenu";
         public const string Gameplay = "SampleGameplay";
+        public const string CardRound = "CardRound";
+        // Combat scene name TBD when Zac starts that half. Do not load it from card code yet.
     }
 }
