@@ -1,4 +1,3 @@
-using Template.Core;
 using Template.Managers;
 using Template.UI.Models;
 using Template.UI.Views;
@@ -85,7 +84,7 @@ namespace Template.UI.Controllers
         private void OnStartClicked()
         {
             AudioManager.Instance?.PlayUiClick();
-            SceneManager.LoadScene(SceneNames.Gameplay);
+            SceneManager.LoadScene("CardRound");
         }
 
         private void OnSettingsClicked()

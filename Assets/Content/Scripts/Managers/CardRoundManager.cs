@@ -1,7 +1,7 @@
-using Bluff.Card.Blackboard;
 using Bluff.Card.Fsm;
 using Bluff.Card.Fsm.States;
 using Bluff.Card.Fuzzy;
+using Content.Scripts.Card.Blackboard;
 using Template.Core;
 using UnityEngine;
 

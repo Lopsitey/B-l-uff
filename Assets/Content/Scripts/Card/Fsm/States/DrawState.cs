@@ -1,4 +1,4 @@
-using Bluff.Card.Blackboard;
+using Content.Scripts.Card.Blackboard;
 using UnityEngine;
 
 namespace Bluff.Card.Fsm.States

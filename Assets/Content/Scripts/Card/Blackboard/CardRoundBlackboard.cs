@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using Bluff.Card.Data;
 
-namespace Bluff.Card.Blackboard
+namespace Content.Scripts.Card.Blackboard
 {
     /// <summary>
     /// Shared imperfect-information memory for one card round.

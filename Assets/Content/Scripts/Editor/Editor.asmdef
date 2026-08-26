@@ -1,0 +1,19 @@
+{
+    "name": "Template.Editor",
+    "rootNamespace": "Template.Editor",
+    "references": [
+        "Template.Runtime",
+        "Unity.Pipeline"
+    ],
+    "includePlatforms": [
+        "Editor"
+    ],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

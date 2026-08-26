@@ -2,11 +2,8 @@ using Template.UI.Controllers;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
-namespace Template.Input
+namespace Template.Content.Scripts.Input
 {
-    /// <summary>
-    /// Input System bridge. Keeps pause handling in one place.
-    /// </summary>
     public sealed class InputHandler : MonoBehaviour
     {
         private InputSystem_Actions m_Actions;

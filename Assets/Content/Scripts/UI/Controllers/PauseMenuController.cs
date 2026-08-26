@@ -1,4 +1,3 @@
-using Template.Core;
 using Template.Managers;
 using Template.UI.Models;
 using Template.UI.Views;
@@ -135,7 +134,7 @@ namespace Template.UI.Controllers
         {
             AudioManager.Instance?.PlayUiClick();
             Time.timeScale = 1f;
-            SceneManager.LoadScene(SceneNames.MainMenu);
+            SceneManager.LoadScene("MainMenu");
         }
 
         private void OnQuitClicked()

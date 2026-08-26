@@ -1,5 +1,5 @@
-using Bluff.Card.Blackboard;
 using Bluff.Card.Fuzzy;
+using Content.Scripts.Card.Blackboard;
 
 namespace Bluff.Card.Fsm
 {

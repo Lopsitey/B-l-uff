@@ -1,4 +1,4 @@
-using Bluff.Card.Blackboard;
+using Content.Scripts.Card.Blackboard;
 
 namespace Bluff.Card.Fuzzy
 {

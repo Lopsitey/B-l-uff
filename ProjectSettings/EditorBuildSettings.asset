@@ -9,7 +9,7 @@ EditorBuildSettings:
     path: Assets/Content/Scenes/MainMenu.unity
     guid: 268156c50a67af0498f324fccd57433d
   - enabled: 1
-    path: Assets/Content/Scenes/SampleGameplay.unity
-    guid: b9ea3c59f1ea52c449bb5376fd7a9530
+    path: Assets/Content/Scenes/CardRound.unity
+    guid: 6fce077e302438846ae294c988894a6a
   m_configObjects:
     com.unity.input.settings.actions: {fileID: -944628639613478452, guid: 2bcd2660ca9b64942af0de543d8d7100, type: 3}
