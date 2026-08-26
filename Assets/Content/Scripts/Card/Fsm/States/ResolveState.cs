@@ -4,7 +4,7 @@ using UnityEngine;
 namespace Bluff.Card.Fsm.States
 {
     /// <summary>
-    /// Truth check, pile take, trust hit, win/lose scratch values for combat later.
+    /// Truth check, pile take, trust hit. Round stays on the card table.
     /// </summary>
     public sealed class ResolveState : ICardRoundState
     {
@@ -19,12 +19,10 @@ namespace Bluff.Card.Fsm.States
 
         public void Enter()
         {
-            Debug.Log($"[CardRound] Resolve.Enter buffScratch={m_Board.PendingCombatBuffStrength}");
+            Debug.Log($"[CardRound] Resolve.Enter pile={m_Board.PileSize}");
             // On caught lie: m_Board.ApplyCaughtLieTrustHit(enemyIndex);
             // Optional UI: "-1 trust" / "X will remember that" (cosmetic only).
-            // Win path: bump PendingCombatBuffStrength (bigger for multi-card risky lies).
-            // Lose path: bump PendingCombatDebuffStrength.
-            // Do not start combat from here.
+            // Apply in-round curse / debuff effects here when potion rules land.
         }
 
         public void Tick()

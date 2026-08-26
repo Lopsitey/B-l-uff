@@ -8,8 +8,7 @@ using UnityEngine;
 namespace Bluff.Managers
 {
     /// <summary>
-    /// Owns one card table session. Wire into CardRound scene later.
-    /// Does not talk to combat. Buff/debuff scratch lives on the blackboard only.
+    /// Owns one Cheat-style card table session.
     /// </summary>
     public sealed class CardRoundManager : Singleton<CardRoundManager>
     {

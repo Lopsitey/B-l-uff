@@ -4,15 +4,15 @@ using Bluff.Card.Data;
 namespace Content.Scripts.Card.Blackboard
 {
     /// <summary>
-    /// Shared imperfect-information memory for one card round.
-    /// FSM states and fuzzy evaluators read and write here. No combat link yet.
+    /// Shared imperfect-information memory for one Cheat-style card round.
+    /// FSM states and fuzzy evaluators read and write here.
     /// </summary>
     public sealed class CardRoundBlackboard
     {
         /// <summary>Default opponents for the first (and currently only) card table.</summary>
         public const int DefaultEnemyCount = 2;
 
-        /// <summary>Soft cap so arrays stay sized. Raise later if multi-floor returns.</summary>
+        /// <summary>Soft cap so arrays stay sized.</summary>
         public int MaxEnemies { get; set; } = 3;
 
         public int EnemyCount { get; set; } = DefaultEnemyCount;
@@ -41,14 +41,6 @@ namespace Content.Scripts.Card.Blackboard
 
         public List<DebuffCardId> DiscardHistory { get; } = new List<DebuffCardId>();
 
-        /// <summary>
-        /// Outcome scratch for the round. Combat will read this later.
-        /// Leave unset for now. Do not call into combat from here.
-        /// </summary>
-        public float PendingCombatBuffStrength { get; set; }
-
-        public float PendingCombatDebuffStrength { get; set; }
-
         public void ResetForNewRound(int enemyCount)
         {
             if (enemyCount < 1)
@@ -64,8 +56,6 @@ namespace Content.Scripts.Card.Blackboard
             EnemyCount = enemyCount;
             CurrentPlayerIndex = 0;
             PileSize = 0;
-            PendingCombatBuffStrength = 0f;
-            PendingCombatDebuffStrength = 0f;
 
             PlayerHand.Clear();
             DiscardHistory.Clear();
