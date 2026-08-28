@@ -1,22 +1,20 @@
-<ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements">
+<ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" editor-extension-mode="False">
     <Style src="project://database/Assets/Content/UI/USS/MenuStyles.uss?fileID=7433441132597879392&amp;guid=ac9964ffdf75194439f257a5facebd73&amp;type=3#MenuStyles" />
     <ui:VisualElement name="PauseRoot" class="pause-root">
         <ui:VisualElement name="PausePanel" class="menu-panel pause-panel">
-            <ui:Label text="Paused" class="menu-title" />
-            <ui:Button name="ResumeButton" text="Resume" class="menu-button" />
-            <ui:Button name="PauseSettingsButton" text="Settings" class="menu-button" />
-            <ui:Button name="PauseControlsButton" text="Controls" class="menu-button" />
-            <ui:Button name="MainMenuButton" text="Main menu" class="menu-button" />
-            <ui:Button name="PauseQuitButton" text="Quit" class="menu-button menu-button-danger" />
+            <ui:Label text="Paused" class="menu-title" style="-unity-font-definition: url(&quot;project://database/Assets/Content/Zac/NicerNightie.ttf?fileID=12800000&amp;guid=3ba48a4296425d147b2f7d124c9a2994&amp;type=3#NicerNightie&quot;); -unity-font-style: normal; font-size: 40px;" />
+            <ui:Button name="ResumeButton" text="Resume" class="menu-button" style="background-color: rgba(70, 110, 180, 0); border-left-color: rgba(149, 149, 149, 0); border-right-color: rgba(149, 149, 149, 0); border-top-color: rgba(149, 149, 149, 0); border-bottom-color: rgba(149, 149, 149, 0);" />
+            <ui:Button name="PauseSettingsButton" text="Settings" class="menu-button" style="border-left-color: rgba(149, 149, 149, 0); border-right-color: rgba(149, 149, 149, 0); border-top-color: rgba(149, 149, 149, 0); border-bottom-color: rgba(149, 149, 149, 0); background-color: rgba(70, 110, 180, 0);" />
+            <ui:Button name="PauseControlsButton" text="Controls" class="menu-button" style="background-color: rgba(70, 110, 180, 0); border-left-color: rgba(149, 149, 149, 0); border-right-color: rgba(149, 149, 149, 0); border-top-color: rgba(149, 149, 149, 0); border-bottom-color: rgba(149, 149, 149, 0);" />
+            <ui:Button name="MainMenuButton" text="Main menu" class="menu-button" style="background-color: rgba(70, 110, 180, 0); border-left-color: rgba(149, 149, 149, 0); border-right-color: rgba(149, 149, 149, 0); border-top-color: rgba(149, 149, 149, 0); border-bottom-color: rgba(149, 149, 149, 0);" />
+            <ui:Button name="PauseQuitButton" text="Quit" class="menu-button menu-button-danger" style="background-color: rgba(70, 110, 180, 0); border-left-color: rgba(149, 149, 149, 0); border-right-color: rgba(149, 149, 149, 0); border-top-color: rgba(149, 149, 149, 0); border-bottom-color: rgba(149, 149, 149, 0);" />
         </ui:VisualElement>
-
         <ui:VisualElement name="PauseSettingsPanel" class="menu-panel menu-panel-hidden pause-panel">
             <ui:Label text="Settings" class="menu-title" />
             <ui:Label text="Master volume" class="menu-label" />
             <ui:Slider name="PauseMasterVolumeSlider" low-value="0" high-value="1" value="0.5" />
             <ui:Button name="PauseSettingsBackButton" text="Back" class="menu-button" />
         </ui:VisualElement>
-
         <ui:VisualElement name="PauseControlsPanel" class="menu-panel menu-panel-hidden pause-panel">
             <ui:Label text="Controls" class="menu-title" />
             <ui:Label text="Move: WASD / Arrow keys" class="menu-label" />

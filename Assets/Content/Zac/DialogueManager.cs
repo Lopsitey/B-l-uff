@@ -24,6 +24,9 @@ public class DialogueLine
     [Header("Dialogue")]
     [TextArea(2, 5)]
     public string text;
+
+    [Header("Autoplay Delay")]
+    public float autoplayDelay = 0f;
 }
 
 
@@ -52,7 +55,6 @@ public class DialogueManager : MonoBehaviour
 
     private void Start()
     {
-        ToggleDialogueBox();
         StartDialogue();
     }
 
@@ -145,6 +147,7 @@ public class DialogueManager : MonoBehaviour
 
         int characterCount = DialogueText.textInfo.characterCount;
 
+        yield return new WaitForSeconds(0.5f);
         for (int i = 0; i <= characterCount; i++)
         {
             DialogueText.maxVisibleCharacters = i;
@@ -152,6 +155,12 @@ public class DialogueManager : MonoBehaviour
             yield return new WaitForSeconds(
                 1f / charactersPerSecond
             );
+        }
+
+        DialogueLine line = dialogueLines[currentLineIndex];
+        if (line.autoplayDelay != 0f)
+        {
+            StartCoroutine(AutoAdvanceAfterDelay(line.autoplayDelay));
         }
 
         isTyping = false;
@@ -173,6 +182,14 @@ public class DialogueManager : MonoBehaviour
             currentText.textInfo.characterCount;
 
         isTyping = false;
+
+    }
+
+    private IEnumerator AutoAdvanceAfterDelay(float delay)
+    {
+        yield return new WaitForSeconds(delay);
+        Debug.Log($"Auto-advancing after {delay} seconds.");
+        NextLine();
     }
 
     private void HideAllPanels()

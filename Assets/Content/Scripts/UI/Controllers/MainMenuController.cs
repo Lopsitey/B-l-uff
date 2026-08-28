@@ -1,3 +1,4 @@
+using System.Collections;
 using Template.Managers;
 using Template.UI.Models;
 using Template.UI.Views;
@@ -16,6 +17,8 @@ namespace Template.UI.Controllers
     {
         private MainMenuView m_View;
         private SettingsModel m_Settings;
+        [SerializeField] private GameObject m_cameraCutscene;
+        [SerializeField] private GameObject m_dialogueManager;
 
         private void Awake()
         {
@@ -80,11 +83,24 @@ namespace Template.UI.Controllers
         private void OnStartClicked()
         {
             AudioManager.Instance?.PlayUiClick();
+            gameObject.GetComponent<UIDocument>().enabled = false;
+
+            StartCoroutine(StartupDelay(1f));
+        }
+
+        private IEnumerator StartupDelay(float seconds)
+        {
+            yield return new WaitForSeconds(seconds);
+            m_cameraCutscene.SetActive(true);
+            yield return new WaitForSeconds(seconds);
+            m_dialogueManager.SetActive(true);
+            yield return new WaitForSeconds(73f);
             SceneManager.LoadScene("CardRound");
         }
 
         private void OnSettingsClicked()
         {
+
             AudioManager.Instance?.PlayUiClick();
             ShowPanel(m_View.SettingsPanel);
         }

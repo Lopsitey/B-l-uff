@@ -1,25 +1,25 @@
 <ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" editor-extension-mode="False">
-    <Style src="project://database/Assets/Content/UI/USS/MenuStyles.uss?fileID=7433441132597879392&amp;guid=ac9964ffdf75194439f257a5facebd73&amp;type=3#MenuStyles"/>
-    <ui:VisualElement name="Root" class="menu-root">
-        <ui:VisualElement name="MainPanel" class="menu-panel">
-            <ui:Label text="B(L)UFF" class="menu-title"/>
-            <ui:Button name="StartButton" text="Start" class="menu-button menu-button-green"/>
-            <ui:Button name="SettingsButton" text="Settings" class="menu-button"/>
-            <ui:Button name="ControlsButton" text="Controls" class="menu-button menu-button-beige"/>
-            <ui:Button name="QuitButton" text="Quit" class="menu-button menu-button-black"/>
+    <Style src="project://database/Assets/Content/UI/USS/MenuStyles.uss?fileID=7433441132597879392&amp;guid=ac9964ffdf75194439f257a5facebd73&amp;type=3#MenuStyles" />
+    <ui:VisualElement name="Root" class="menu-root" style="background-color: rgba(18, 18, 24, 0);">
+        <ui:VisualElement name="MainPanel" class="menu-panel" style="background-color: rgba(255, 255, 255, 0);">
+            <ui:Label class="menu-title" style="-unity-font-definition: url(&quot;project://database/Assets/Content/Zac/NicerNightie.ttf?fileID=12800000&amp;guid=3ba48a4296425d147b2f7d124c9a2994&amp;type=3#NicerNightie&quot;); -unity-font-style: normal; -unity-text-align: middle-center; white-space: pre; background-image: url(&quot;project://database/Assets/Content/Zac/title.png?fileID=21300000&amp;guid=3804662d77141224685264771a95eb11&amp;type=3#title&quot;); flex-direction: column; padding-left: 2px; text-overflow: clip; margin-left: 100px; margin-right: 100px; padding-bottom: 43px;" />
+            <ui:Button name="StartButton" text="Lament" class="menu-button menu-button-green" style="-unity-font-definition: url(&quot;project://database/Assets/Content/Zac/NicerNightie.ttf?fileID=12800000&amp;guid=3ba48a4296425d147b2f7d124c9a2994&amp;type=3#NicerNightie&quot;); background-color: rgba(0, 130, 90, 0); font-size: 32px; -unity-text-outline-color: rgba(0, 0, 0, 0); -unity-background-image-tint-color: rgb(255, 255, 255); border-left-color: rgba(149, 149, 149, 0); border-right-color: rgba(149, 149, 149, 0); border-top-color: rgba(149, 149, 149, 0); border-bottom-color: rgba(149, 149, 149, 0);" />
+            <ui:Button name="SettingsButton" text="Reflect" class="menu-button" style="-unity-font-definition: url(&quot;project://database/Assets/Content/Zac/NicerNightie.ttf?fileID=12800000&amp;guid=3ba48a4296425d147b2f7d124c9a2994&amp;type=3#NicerNightie&quot;); border-left-color: rgba(149, 149, 149, 0); border-right-color: rgba(149, 149, 149, 0); border-top-color: rgba(149, 149, 149, 0); border-bottom-color: rgba(149, 149, 149, 0); background-color: rgba(70, 110, 180, 0); transition-property: all; transition-duration: 0s; transition-timing-function: ease; transition-delay: 0s; font-size: 30px;" />
+            <ui:Button name="ControlsButton" text="Compose Yourself" class="menu-button" style="-unity-font-definition: url(&quot;project://database/Assets/Content/Zac/NicerNightie.ttf?fileID=12800000&amp;guid=3ba48a4296425d147b2f7d124c9a2994&amp;type=3#NicerNightie&quot;); border-left-color: rgba(149, 149, 149, 0); border-right-color: rgba(149, 149, 149, 0); border-top-color: rgba(149, 149, 149, 0); border-bottom-color: rgba(149, 149, 149, 0); background-color: rgba(70, 110, 180, 0); transition-property: all; transition-duration: 0s; transition-timing-function: ease; transition-delay: 0s; font-size: 30px;" />
+            <ui:Button name="QuitButton" text="Abandon Hope" class="menu-button menu-button-black" style="-unity-font-definition: url(&quot;project://database/Assets/Content/Zac/NicerNightie.ttf?fileID=12800000&amp;guid=3ba48a4296425d147b2f7d124c9a2994&amp;type=3#NicerNightie&quot;); border-left-color: rgba(149, 149, 149, 0); border-right-color: rgba(149, 149, 149, 0); border-top-color: rgba(149, 149, 149, 0); border-bottom-color: rgba(149, 149, 149, 0); background-color: rgba(40, 40, 50, 0); font-size: 30px;" />
         </ui:VisualElement>
         <ui:VisualElement name="SettingsPanel" class="menu-panel menu-panel-hidden">
-            <ui:Label text="Settings" class="menu-title"/>
-            <ui:Label text="Master volume" class="menu-label"/>
-            <ui:Slider name="MasterVolumeSlider" low-value="0" high-value="1" value="0.5"/>
-            <ui:Button name="SettingsBackButton" text="Back" class="menu-button"/>
+            <ui:Label text="Settings" class="menu-title" />
+            <ui:Label text="Master volume" class="menu-label" />
+            <ui:Slider name="MasterVolumeSlider" low-value="0" high-value="1" value="0.5" />
+            <ui:Button name="SettingsBackButton" text="Back" class="menu-button" />
         </ui:VisualElement>
         <ui:VisualElement name="ControlsPanel" class="menu-panel menu-panel-hidden">
-            <ui:Label text="Controls" class="menu-title"/>
-            <ui:Label text="Move: WASD / Arrow keys" class="menu-label"/>
-            <ui:Label text="Pause: Escape" class="menu-label"/>
-            <ui:Label text="Confirm: Enter / Left click" class="menu-label"/>
-            <ui:Button name="ControlsBackButton" text="Back" class="menu-button"/>
+            <ui:Label text="Controls" class="menu-title" />
+            <ui:Label text="Move: WASD / Arrow keys" class="menu-label" />
+            <ui:Label text="Pause: Escape" class="menu-label" />
+            <ui:Label text="Confirm: Enter / Left click" class="menu-label" />
+            <ui:Button name="ControlsBackButton" text="Back" class="menu-button" />
         </ui:VisualElement>
     </ui:VisualElement>
 </ui:UXML>
