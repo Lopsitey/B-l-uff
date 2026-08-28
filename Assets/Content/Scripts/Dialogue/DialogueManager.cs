@@ -105,22 +105,26 @@ public class DialogueManager : MonoBehaviour
 
         HideAllPanels();
 
-        Portrait.sprite = line.character.characterPortrait;
-        
-        StartTyping(line.text);
-
-        switch (line.character.characterName)
+        if (line.character != null && Portrait != null)
         {
-            case DialogueMode.Player:
-                playerPanel.SetActive(true);
-                break;
-
-            default:
-                enemyPanel.SetActive(true);
-                break;
-
+            Portrait.sprite = line.character.characterPortrait;
         }
 
+        StartTyping(line.text);
+
+        if (line.character != null)
+        {
+            switch (line.character.characterName)
+            {
+                case DialogueMode.Player:
+                    if (playerPanel != null) playerPanel.SetActive(true);
+                    break;
+
+                default:
+                    if (enemyPanel != null) enemyPanel.SetActive(true);
+                    break;
+            }
+        }
     }
 
     private void StartTyping(string text)
@@ -138,23 +142,26 @@ public class DialogueManager : MonoBehaviour
     {
         isTyping = true;
 
-        DialogueText.text = text;
-
-        // Force TMP to generate the text information immediately
-        DialogueText.ForceMeshUpdate();
-
-        DialogueText.maxVisibleCharacters = 0;
-
-        int characterCount = DialogueText.textInfo.characterCount;
-
-        yield return new WaitForSeconds(0.5f);
-        for (int i = 0; i <= characterCount; i++)
+        if (DialogueText != null)
         {
-            DialogueText.maxVisibleCharacters = i;
+            DialogueText.text = text;
 
-            yield return new WaitForSeconds(
-                1f / charactersPerSecond
-            );
+            // Force TMP to generate the text information immediately
+            DialogueText.ForceMeshUpdate();
+
+            DialogueText.maxVisibleCharacters = 0;
+
+            int characterCount = DialogueText.textInfo.characterCount;
+
+            yield return new WaitForSeconds(0.5f);
+            for (int i = 0; i <= characterCount; i++)
+            {
+                DialogueText.maxVisibleCharacters = i;
+
+                yield return new WaitForSeconds(
+                    1f / charactersPerSecond
+                );
+            }
         }
 
         DialogueLine line = dialogueLines[currentLineIndex];
@@ -169,7 +176,7 @@ public class DialogueManager : MonoBehaviour
 
     private void FinishTyping()
     {
-        if (!isTyping || currentText == null)
+        if (!isTyping)
             return;
 
         if (typewriterCoroutine != null)
@@ -178,11 +185,13 @@ public class DialogueManager : MonoBehaviour
             typewriterCoroutine = null;
         }
 
-        currentText.maxVisibleCharacters =
-            currentText.textInfo.characterCount;
+        if (DialogueText != null)
+        {
+            DialogueText.maxVisibleCharacters =
+                DialogueText.textInfo.characterCount;
+        }
 
         isTyping = false;
-
     }
 
     private IEnumerator AutoAdvanceAfterDelay(float delay)
@@ -194,8 +203,8 @@ public class DialogueManager : MonoBehaviour
 
     private void HideAllPanels()
     {
-        playerPanel.SetActive(false);
-        enemyPanel.SetActive(false);
+        if (playerPanel != null) playerPanel.SetActive(false);
+        if (enemyPanel != null) enemyPanel.SetActive(false);
     }
 
     private void EndDialogue()
@@ -218,6 +227,9 @@ public class DialogueManager : MonoBehaviour
 
     private void ToggleDialogueBox() 
     {
-        DialogueBox.SetActive(!DialogueBox.activeSelf);
+        if (DialogueBox != null)
+        {
+            DialogueBox.SetActive(!DialogueBox.activeSelf);
+        }
     }
 }

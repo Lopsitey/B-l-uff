@@ -10,6 +10,8 @@ public class TmpCameraShifter : MonoBehaviour
 
     public IEnumerator ShiftCamera()
     {
+        if (transform.parent == null) yield break;
+
         while (transform.parent.position.x < 55f)
         {
             Vector3 pos = transform.parent.position;

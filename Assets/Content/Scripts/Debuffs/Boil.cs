@@ -41,30 +41,42 @@ public class Boil : MonoBehaviour
     {
         Debug.Log("Mouse entered boil!");
 
-        tooltip.SetActive(true);
+        if (tooltip != null)
+        {
+            tooltip.SetActive(true);
+        }
 
-        effectNameText.text = effectStatus.DisplayName;
-        descriptionText.text = effectStatus.Description;
+        if (effectStatus != null)
+        {
+            if (effectNameText != null) effectNameText.text = effectStatus.DisplayName;
+            if (descriptionText != null) descriptionText.text = effectStatus.Description;
+        }
     }
 
     private void OnMouseExit()
     {
         Debug.Log("Mouse left boil!");
 
-        tooltip.SetActive(false);
+        if (tooltip != null)
+        {
+            tooltip.SetActive(false);
+        }
     }
 
     private void showBoil()
     {
-        boilSprite.enabled = true;
-        boilSprite.GetComponent<SpriteRenderer>().enabled = true;
-
+        if (boilSprite != null)
+        {
+            boilSprite.enabled = true;
+        }
     }
 
     private void hideBoil()
     {
-        boilSprite.enabled = false;
-
+        if (boilSprite != null)
+        {
+            boilSprite.enabled = false;
+        }
     }
 
     private void activateEffect()

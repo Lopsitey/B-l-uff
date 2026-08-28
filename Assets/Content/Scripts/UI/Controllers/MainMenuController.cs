@@ -35,17 +35,17 @@ namespace Template.UI.Controllers
             if (m_View.MasterVolumeSlider != null)
             {
                 m_View.MasterVolumeSlider.value = m_Settings.MasterVolume;
+                m_View.MasterVolumeSlider.RegisterValueChangedCallback(OnMasterVolumeChanged);
             }
 
             ShowPanel(m_View.MainPanel);
 
-            m_View.StartButton.clicked += OnStartClicked;
-            m_View.SettingsButton.clicked += OnSettingsClicked;
-            m_View.ControlsButton.clicked += OnControlsClicked;
-            m_View.QuitButton.clicked += OnQuitClicked;
-            m_View.SettingsBackButton.clicked += OnBackToMainClicked;
-            m_View.ControlsBackButton.clicked += OnBackToMainClicked;
-            m_View.MasterVolumeSlider.RegisterValueChangedCallback(OnMasterVolumeChanged);
+            if (m_View.StartButton != null) m_View.StartButton.clicked += OnStartClicked;
+            if (m_View.SettingsButton != null) m_View.SettingsButton.clicked += OnSettingsClicked;
+            if (m_View.ControlsButton != null) m_View.ControlsButton.clicked += OnControlsClicked;
+            if (m_View.QuitButton != null) m_View.QuitButton.clicked += OnQuitClicked;
+            if (m_View.SettingsBackButton != null) m_View.SettingsBackButton.clicked += OnBackToMainClicked;
+            if (m_View.ControlsBackButton != null) m_View.ControlsBackButton.clicked += OnBackToMainClicked;
         }
 
         private void OnDestroy()
@@ -55,12 +55,12 @@ namespace Template.UI.Controllers
                 return;
             }
 
-            m_View.StartButton.clicked -= OnStartClicked;
-            m_View.SettingsButton.clicked -= OnSettingsClicked;
-            m_View.ControlsButton.clicked -= OnControlsClicked;
-            m_View.QuitButton.clicked -= OnQuitClicked;
-            m_View.SettingsBackButton.clicked -= OnBackToMainClicked;
-            m_View.ControlsBackButton.clicked -= OnBackToMainClicked;
+            if (m_View.StartButton != null) m_View.StartButton.clicked -= OnStartClicked;
+            if (m_View.SettingsButton != null) m_View.SettingsButton.clicked -= OnSettingsClicked;
+            if (m_View.ControlsButton != null) m_View.ControlsButton.clicked -= OnControlsClicked;
+            if (m_View.QuitButton != null) m_View.QuitButton.clicked -= OnQuitClicked;
+            if (m_View.SettingsBackButton != null) m_View.SettingsBackButton.clicked -= OnBackToMainClicked;
+            if (m_View.ControlsBackButton != null) m_View.ControlsBackButton.clicked -= OnBackToMainClicked;
         }
 
         private void ShowPanel(VisualElement panelToShow)

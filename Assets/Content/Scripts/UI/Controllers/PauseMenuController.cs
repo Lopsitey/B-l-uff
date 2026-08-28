@@ -34,16 +34,16 @@ namespace Template.UI.Controllers
             if (m_View.MasterVolumeSlider != null)
             {
                 m_View.MasterVolumeSlider.value = m_Settings.MasterVolume;
+                m_View.MasterVolumeSlider.RegisterValueChangedCallback(OnMasterVolumeChanged);
             }
 
-            m_View.ResumeButton.clicked += OnResumeClicked;
-            m_View.SettingsButton.clicked += OnSettingsClicked;
-            m_View.ControlsButton.clicked += OnControlsClicked;
-            m_View.MainMenuButton.clicked += OnMainMenuClicked;
-            m_View.QuitButton.clicked += OnQuitClicked;
-            m_View.SettingsBackButton.clicked += OnBackToPauseClicked;
-            m_View.ControlsBackButton.clicked += OnBackToPauseClicked;
-            m_View.MasterVolumeSlider.RegisterValueChangedCallback(OnMasterVolumeChanged);
+            if (m_View.ResumeButton != null) m_View.ResumeButton.clicked += OnResumeClicked;
+            if (m_View.SettingsButton != null) m_View.SettingsButton.clicked += OnSettingsClicked;
+            if (m_View.ControlsButton != null) m_View.ControlsButton.clicked += OnControlsClicked;
+            if (m_View.MainMenuButton != null) m_View.MainMenuButton.clicked += OnMainMenuClicked;
+            if (m_View.QuitButton != null) m_View.QuitButton.clicked += OnQuitClicked;
+            if (m_View.SettingsBackButton != null) m_View.SettingsBackButton.clicked += OnBackToPauseClicked;
+            if (m_View.ControlsBackButton != null) m_View.ControlsBackButton.clicked += OnBackToPauseClicked;
         }
 
         private void OnDestroy()
@@ -53,13 +53,13 @@ namespace Template.UI.Controllers
                 return;
             }
 
-            m_View.ResumeButton.clicked -= OnResumeClicked;
-            m_View.SettingsButton.clicked -= OnSettingsClicked;
-            m_View.ControlsButton.clicked -= OnControlsClicked;
-            m_View.MainMenuButton.clicked -= OnMainMenuClicked;
-            m_View.QuitButton.clicked -= OnQuitClicked;
-            m_View.SettingsBackButton.clicked -= OnBackToPauseClicked;
-            m_View.ControlsBackButton.clicked -= OnBackToPauseClicked;
+            if (m_View.ResumeButton != null) m_View.ResumeButton.clicked -= OnResumeClicked;
+            if (m_View.SettingsButton != null) m_View.SettingsButton.clicked -= OnSettingsClicked;
+            if (m_View.ControlsButton != null) m_View.ControlsButton.clicked -= OnControlsClicked;
+            if (m_View.MainMenuButton != null) m_View.MainMenuButton.clicked -= OnMainMenuClicked;
+            if (m_View.QuitButton != null) m_View.QuitButton.clicked -= OnQuitClicked;
+            if (m_View.SettingsBackButton != null) m_View.SettingsBackButton.clicked -= OnBackToPauseClicked;
+            if (m_View.ControlsBackButton != null) m_View.ControlsBackButton.clicked -= OnBackToPauseClicked;
         }
 
         public void TogglePause()
