@@ -18,7 +18,7 @@ public class Lightning : MonoBehaviour
         {
             yield return new WaitForSeconds(Random.Range(2f, 7f));
             spriteRenderer.color = new Color(1, 1, 1, 0.3f);
-            yield return new WaitForSeconds(Random.Range(0.1f, 0.4f));
+            yield return new WaitForSeconds(Random.Range(0.2f, 0.6f));
             spriteRenderer.color = new Color(1, 1, 1, 0);
         }
 
