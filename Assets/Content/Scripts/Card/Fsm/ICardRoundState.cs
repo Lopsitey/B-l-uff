@@ -1,6 +1,6 @@
-namespace Bluff.Card.Fsm
+namespace Template.Content.Scripts.Card.Fsm
 {
-    public interface ICardRoundState
+    internal interface ICardRoundState
     {
         void Enter();
         void Tick();

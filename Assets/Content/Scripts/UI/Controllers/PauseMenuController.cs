@@ -1,3 +1,6 @@
+#region
+
+using Template.Content.Scripts.Managers;
 using Template.Managers;
 using Template.UI.Models;
 using Template.UI.Views;
@@ -5,26 +8,23 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UIElements;
 
+#endregion
+
 namespace Template.UI.Controllers
 {
     /// <summary>
-    /// Handles pause overlay button presses and panel swaps.
+    ///     Handles pause overlay button presses and panel swaps.
     /// </summary>
+    [RequireComponent(typeof(PauseMenuView))]
     public sealed class PauseMenuController : MonoBehaviour
     {
-        [SerializeField]
         private PauseMenuView m_View;
-
         private SettingsModel m_Settings;
         private bool m_IsOpen;
 
         private void Awake()
         {
-            if (m_View == null)
-            {
-                m_View = GetComponent<PauseMenuView>();
-            }
-
+            m_View = GetComponent<PauseMenuView>();
             m_Settings = new SettingsModel();
             m_Settings.Load();
         }
@@ -79,14 +79,14 @@ namespace Template.UI.Controllers
             m_IsOpen = true;
             ShowPanel(m_View.PausePanel);
             m_View.SetVisible(true);
-            GameManager.Instance?.SetPaused(true);
+            Time.timeScale = 0f;
         }
 
         public void ClosePause()
         {
             m_IsOpen = false;
             m_View.SetVisible(false);
-            GameManager.Instance?.SetPaused(false);
+            Time.timeScale = 1f;
         }
 
         private void ShowPanel(VisualElement panelToShow)

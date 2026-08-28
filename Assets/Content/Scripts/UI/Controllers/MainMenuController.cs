@@ -11,19 +11,15 @@ namespace Template.UI.Controllers
     /// Handles main menu button presses and panel swaps.
     /// SettingsModel is injected through the constructor-style Awake setup (plain new + Load).
     /// </summary>
+    [RequireComponent(typeof(MainMenuView))]
     public sealed class MainMenuController : MonoBehaviour
     {
-        [SerializeField]
         private MainMenuView m_View;
-
         private SettingsModel m_Settings;
 
         private void Awake()
         {
-            if (m_View == null)
-            {
-                m_View = GetComponent<MainMenuView>();
-            }
+            m_View = GetComponent<MainMenuView>();
 
             // Dependency injection for a tiny system: create the model and hand it to this controller.
             // Expand later with a real injector if the project grows.

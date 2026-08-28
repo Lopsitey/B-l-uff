@@ -1,10 +1,14 @@
+#region
+
 using UnityEngine;
 
-namespace Template.Core
+#endregion
+
+namespace Template.Content.Scripts.Managers
 {
     /// <summary>
-    /// Persistent singleton base. Handles duplicate destruction and DontDestroyOnLoad.
-    /// The generic type check stops accidental inheritance mistakes like HUD : Singleton&lt;AudioManager&gt;.
+    ///     Persistent singleton base. Handles duplicate destruction and DontDestroyOnLoad.
+    ///     The generic type check stops accidental inheritance mistakes like HUD : Singleton&lt;AudioManager&gt;.
     /// </summary>
     public abstract class Singleton<T> : MonoBehaviour where T : MonoBehaviour
     {

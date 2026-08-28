@@ -1,36 +1,69 @@
-using Bluff.Card.Fuzzy;
-using Content.Scripts.Card.Blackboard;
+#region
+
+using System.Collections.Generic;
+using Template.Content.Scripts.Card.Blackboard;
+using Template.Content.Scripts.Card.Data;
 using UnityEngine;
+using static Template.Content.Scripts.Card.Fuzzy.AIFuzzyBrain;
 
-namespace Bluff.Card.Fsm.States
+#endregion
+
+namespace Template.Content.Scripts.Card.Fsm.States
 {
-    /// <summary>
-    /// AI or player chooses honest play vs bluff. Fuzzy feeds risk, not a bool.
-    /// </summary>
-    public sealed class DecideState : ICardRoundState
+    internal sealed class DecideState : ICardRoundState
     {
-        private readonly CardRoundFsm m_Fsm;
-        private readonly CardRoundBlackboard m_Board;
-        private readonly BluffFuzzyEvaluator m_Fuzzy;
+        private readonly FSM m_Fsm;
+        private readonly GameBlackboard m_Board;
 
-        public DecideState(CardRoundFsm fsm, CardRoundBlackboard board, BluffFuzzyEvaluator fuzzy)
+        public DecideState(FSM fsm, GameBlackboard board)
         {
             m_Fsm = fsm;
             m_Board = board;
-            m_Fuzzy = fuzzy;
         }
 
         public void Enter()
         {
-            Debug.Log("[CardRound] Decide.Enter");
-            // Example read only. Real choice comes later.
-            var risk = m_Fuzzy.EvaluateBluffRisk(m_Board, m_Board.CurrentPlayerIndex);
-            Debug.Log($"[CardRound] sample bluff risk = {risk:0.00}");
+            if (m_Board.ActiveTurn == TurnUser.Player)
+            {
+                Debug.Log($"[CardRound] Decide.Enter seat={m_Board.ActiveTurn} player vs {m_Board.GetOpponentLabel()}");
+            }
+            else
+            {
+                Debug.Log(
+                    $"[CardRound] Decide.Enter seat={m_Board.ActiveTurn} opponent vs {m_Board.GetOpponentLabel()}");
+                const float fuzzyThreshold = 0.85f;
+                Debug.Log($"[CardRound] Decide.Enter seat={m_Board.ActiveTurn}");
+
+                if (EvaluateBluffRisk(m_Board) > fuzzyThreshold)
+                {
+                    Debug.Log($"[CardRound] bluff risk = {EvaluateBluffRisk(m_Board):0.00}");
+
+                    var bluffCombo = EvaluateComboAppetite(m_Board, 0f, true);
+                    Debug.Log($"[CardRound] combo appetite honest={bluffCombo:0.00} bluff={bluffCombo:0.00}");
+                }
+                else
+                {
+                    var honestCombo = EvaluateComboAppetite(m_Board, 0f, false);
+                    Debug.Log($"[CardRound] combo appetite honest={honestCombo:0.00} bluff={honestCombo:0.00}");
+                }
+            }
+
+            //TODO ConfirmDecision(claimedColour, chosenCards);
         }
+
+        // Called when decision is ready (by AI in Enter or by Player UI button callback)
+        // Once cards + claim are decided, transition to PlayState
+        public void ConfirmDecision(CardColour claimedColour, List<CardID> chosenCards)
+        {
+            m_Board.TargetColour = claimedColour;
+            // Clean transition into PlayState
+            m_Fsm.SetState(new PlayState(m_Fsm, m_Board, chosenCards));
+        }
+
 
         public void Tick()
         {
-            // TODO: pick cards + claim, then PlayState
+            // Update the state each frame
         }
 
         public void Exit()

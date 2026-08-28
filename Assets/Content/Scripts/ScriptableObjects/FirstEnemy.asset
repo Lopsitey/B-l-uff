@@ -1,0 +1,20 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a3f8c2e14b9d4a6e8f1c0d5e7b2a3941, type: 3}
+  m_Name: FirstEnemy
+  m_EditorClassIdentifier: Template.Runtime::Bluff.Card.Fuzzy.OpponentFuzzyProfile
+  displayName: 
+  startingTrust: 0.5
+  trustLossOnCaughtLie: 0.1
+  callIntelligence: 0.5
+  bluffIntelligence: 0.3
+  comboIntelligence: 0.3

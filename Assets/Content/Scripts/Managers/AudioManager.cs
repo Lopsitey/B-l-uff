@@ -1,16 +1,18 @@
-using Template.Core;
+#region
+
+using Template.Content.Scripts.Managers;
 using UnityEngine;
+
+#endregion
 
 namespace Template.Managers
 {
     public sealed class AudioManager : Singleton<AudioManager>
     {
-        [Header("Volume (0 to 1)")]
-        [SerializeField] [Range(0f, 1f)]
+        [Header("Volume (0 to 1)")] [SerializeField] [Range(0f, 1f)]
         private float m_MasterVolume = 0.5f;
 
-        [Header("Optional UI clip")]
-        [SerializeField]
+        [Header("Optional UI clip")] [SerializeField]
         private AudioClip m_UiClickClip;
 
         private AudioSource m_SfxSource;
