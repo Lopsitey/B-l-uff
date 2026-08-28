@@ -14,8 +14,16 @@ namespace Template.Content.Scripts.Card.Fsm.States
     /// </summary>
     internal sealed class ResolveState : ICardRoundState
     {
+        /// <summary>Extra cards a caught liar draws from outside play, on top of taking the pot.</summary>
+        private const int PenaltyDraw = 2;
+
+        /// <summary>Seconds a revealed challenge stays on screen before the next turn begins.</summary>
+        private const float RevealHold = 1.6f;
+
         private readonly FSM m_Fsm;
         private readonly GameBlackboard m_Board;
+
+        private float m_HoldTimer;
 
         public ResolveState(FSM fsm, GameBlackboard board)
         {
@@ -23,10 +31,13 @@ namespace Template.Content.Scripts.Card.Fsm.States
             m_Board = board;
         }
 
+        /// <summary>What the challenge exposed, for the UI to show while the reveal is held.</summary>
+        public string RevealSummary { get; private set; }
+
         public void Enter()
         {
-            Debug.Log(
-                $"[CardRound] Resolve.Enter: pile = {m_Board.PileSize}, challenged = {m_Board.LastPlayWasChallenged}, trust = {m_Board.TrustTowardPlayer:0.00}");
+            m_HoldTimer = 0f;
+            RevealSummary = null;
 
             if (m_Board.LastPlayWasChallenged)
             {
@@ -36,20 +47,30 @@ namespace Template.Content.Scripts.Card.Fsm.States
 
         public void Tick()
         {
-            // 1. Check Win / Loss condition
+            // A revealed challenge is the one moment the player learns something, so hold it long enough to read
+            if (RevealSummary != null)
+            {
+                m_HoldTimer += Time.deltaTime;
+                if (m_HoldTimer < RevealHold) return;
+            }
+
+            // Win checks run after the challenge so a caught liar cannot win on the play that exposed them
             if (m_Board.PlayerHand.Count == 0)
             {
+                m_Board.RoundWinner = TurnUser.Player;
                 Debug.Log("[CardRound] *** PLAYER WINS THE ROUND! (Hand is empty) ***");
+                m_Fsm.SetState(null);
                 return;
             }
 
             if (m_Board.OpponentHand.Count == 0)
             {
+                m_Board.RoundWinner = TurnUser.Opponent;
                 Debug.Log($"[CardRound] *** {m_Board.GetOpponentLabel()} WINS THE ROUND! (Hand is empty) ***");
+                m_Fsm.SetState(null);
                 return;
             }
 
-            // 2. If round continues, swap active seat and return to DecideState
             m_Board.SwapActiveTurn();
             m_Fsm.SetState(new DecideState(m_Fsm, m_Board));
         }
@@ -61,9 +82,8 @@ namespace Template.Content.Scripts.Card.Fsm.States
         private void ResolveChallenge()
         {
             var activeSeat = m_Board.ActiveTurn;
-            var defendingSeat = activeSeat == TurnUser.Player ? TurnUser.Opponent : TurnUser.Player;
+            var defendingSeat = m_Board.DefendingSeat;
 
-            // Determine if the active seat was telling the truth
             var wasBluff = false;
             for (var i = 0; i < m_Board.LastPlayedCards.Count; i++)
             {
@@ -74,35 +94,38 @@ namespace Template.Content.Scripts.Card.Fsm.States
                 }
             }
 
+            m_Board.RecordReveal(activeSeat, wasBluff);
+            RevealSummary = BuildRevealSummary(activeSeat, defendingSeat, wasBluff);
+            Debug.Log($"[CardRound] {RevealSummary}");
+
             if (wasBluff)
             {
-                Debug.Log($"[CardRound] Challenge SUCCEEDED! {activeSeat} was caught bluffing!");
-
-                if (activeSeat == TurnUser.Player)
-                {
-                    m_Board.DecrementTrust();
-                }
-
-                // Apply debuff of the revealed fake card
                 if (m_Board.LastPlayedCards.Count > 0)
                 {
                     Debuffs.ApplyCardDebuff(m_Board.LastPlayedCards[0]);
                 }
 
-                // Penalty: Liar draws 3 penalty cards from the draw stack
-                m_Board.DrawExtraCards(activeSeat, 3);
+                // A caught liar eats the pot plus cards from outside play, so lying costs more than a bad call
+                m_Board.TakePile(activeSeat);
+                m_Board.DrawExtraCards(activeSeat, PenaltyDraw);
+                return;
             }
-            else
+
+            m_Board.TakePile(defendingSeat);
+        }
+
+        /// <summary>Spells out the revealed cards so the player can see exactly what they called.</summary>
+        private string BuildRevealSummary(TurnUser activeSeat, TurnUser defendingSeat, bool wasBluff)
+        {
+            var revealed = string.Empty;
+            for (var i = 0; i < m_Board.LastPlayedCards.Count; i++)
             {
-                Debug.Log($"[CardRound] Challenge FAILED! {activeSeat} was telling the truth!");
-
-                // Penalty: Wrongful challenger draws 3 penalty cards from the draw stack
-                m_Board.DrawExtraCards(defendingSeat, 3);
+                revealed += (i > 0 ? ", " : string.Empty) + m_Board.LastPlayedCards[i].Colour;
             }
 
-            // Clear the pot on challenge resolution
-            m_Board.PileSize = 0;
-            m_Board.LastPlayedCards.Clear();
+            return wasBluff
+                ? $"Caught! {activeSeat} claimed {m_Board.TargetColour} but played {revealed}. {activeSeat} takes the pot of {m_Board.PileSize} plus {PenaltyDraw} more."
+                : $"Honest. {activeSeat} really had {revealed}. {defendingSeat} takes the pot of {m_Board.PileSize}.";
         }
     }
 }

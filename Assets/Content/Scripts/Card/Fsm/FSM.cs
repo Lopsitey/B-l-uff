@@ -17,6 +17,9 @@ namespace Template.Content.Scripts.Card.Fsm
         private readonly AIFuzzyBrain m_Fuzzy;
         private ICardRoundState m_Current;
 
+        /// <summary>The state currently running, or null once the round has ended.</summary>
+        public ICardRoundState Current => m_Current;
+
         // Properties filled when the object is constructed.
         public FSM(GameBlackboard blackboard, AIFuzzyBrain fuzzy)
         {
