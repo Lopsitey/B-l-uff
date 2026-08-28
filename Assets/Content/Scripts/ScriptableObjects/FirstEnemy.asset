@@ -11,10 +11,10 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: a3f8c2e14b9d4a6e8f1c0d5e7b2a3941, type: 3}
   m_Name: FirstEnemy
-  m_EditorClassIdentifier: Template.Runtime::Bluff.Card.Fuzzy.OpponentFuzzyProfile
-  displayName: 
-  startingTrust: 0.5
-  trustLossOnCaughtLie: 0.1
-  callIntelligence: 0.5
-  bluffIntelligence: 0.3
-  comboIntelligence: 0.3
+  m_EditorClassIdentifier: Template.Runtime::Template.Content.Scripts.Card.Fuzzy.AIFuzzyProfile
+  m_DisplayName: First Enemy
+  m_StartingTrust: 0.5
+  m_DistrustPerLie: 0.1
+  m_LieChance: 0.3
+  m_CallChance: 0.5
+  m_ComboChance: 0.3
