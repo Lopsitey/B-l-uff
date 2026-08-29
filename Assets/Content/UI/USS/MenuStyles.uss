@@ -46,10 +46,11 @@
     background-color: rgb(70, 110, 180);
     color: white;
     font-size: 16px;
+    align-self: center;
 }
 
 .menu-button:hover {
-    color: black;
+    color: yellow;
     background-color: white;
 }
 
