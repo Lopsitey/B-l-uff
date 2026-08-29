@@ -9,9 +9,9 @@ namespace Template.Content.Scripts.Card.Data
     /// <summary>
     ///     Handler for applying debuffs triggered by card colours.
     /// </summary>
-    public static class Debuffs
+    public sealed class Debuffs
     {
-        public static void ApplyCardDebuff(CardColour colour)
+        public void ApplyCardDebuff(CardColour colour)
         {
             switch (colour)
             {
@@ -41,27 +41,23 @@ namespace Template.Content.Scripts.Card.Data
             }
         }
 
-        public static void ApplyCardDebuff(CardID card)
-        {
-            ApplyCardDebuff(card.Colour);
-        }
-
         private static void Love()
         {
+            var t = new CardID(CardSuit.Gems, CardColour.Red);
             // TODO: Implement Love debuff effect
         }
 
-        private static void Midas()
+        private void Midas()
         {
             // TODO: Implement Midas debuff effect
         }
 
-        private static void Stone()
+        private void Stone()
         {
             // TODO: Implement Stone debuff effect
         }
 
-        private static void Blind()
+        private void Blind()
         {
             // TODO: Implement Blind debuff effect
         }

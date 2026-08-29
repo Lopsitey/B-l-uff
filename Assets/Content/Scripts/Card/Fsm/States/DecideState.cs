@@ -23,97 +23,51 @@ namespace Template.Content.Scripts.Card.Fsm.States
 
         public void Enter()
         {
-            Debug.Log($"[CardRound] Decide.Enter: ActiveTurn = {m_Board.ActiveTurn}");
-
-            if (m_Board.ActiveTurn == TurnUser.Opponent)
+            if (m_Board.ActiveTurn == TurnUser.Player)
             {
-                ExecuteAIDecision();
+                Debug.Log($"[CardRound] Decide.Enter seat={m_Board.ActiveTurn} player vs {m_Board.GetOpponentLabel()}");
             }
             else
             {
-                Debug.Log($"[CardRound] Player's turn! Hand count: {m_Board.PlayerHand.Count}. Press [Space] to play first card, or use UI.");
+                Debug.Log(
+                    $"[CardRound] Decide.Enter seat={m_Board.ActiveTurn} opponent vs {m_Board.GetOpponentLabel()}");
+                const float fuzzyThreshold = 0.85f;
+                Debug.Log($"[CardRound] Decide.Enter seat={m_Board.ActiveTurn}");
+
+                if (EvaluateBluffRisk(m_Board) > fuzzyThreshold)
+                {
+                    Debug.Log($"[CardRound] bluff risk = {EvaluateBluffRisk(m_Board):0.00}");
+
+                    var bluffCombo = EvaluateComboAppetite(m_Board, 0f, true);
+                    Debug.Log($"[CardRound] combo appetite honest={bluffCombo:0.00} bluff={bluffCombo:0.00}");
+                }
+                else
+                {
+                    var honestCombo = EvaluateComboAppetite(m_Board, 0f, false);
+                    Debug.Log($"[CardRound] combo appetite honest={honestCombo:0.00} bluff={honestCombo:0.00}");
+                }
             }
+
+            //TODO ConfirmDecision(claimedColour, chosenCards);
         }
+
+        // Called when decision is ready (by AI in Enter or by Player UI button callback)
+        // Once cards + claim are decided, transition to PlayState
+        public void ConfirmDecision(CardColour claimedColour, List<CardID> chosenCards)
+        {
+            m_Board.TargetColour = claimedColour;
+            // Clean transition into PlayState
+            m_Fsm.SetState(new PlayState(m_Fsm, m_Board, chosenCards));
+        }
+
 
         public void Tick()
         {
-            // Placeholder debug input for testing without full UI
-            if (m_Board.ActiveTurn == TurnUser.Player)
-            {
-                if (UnityEngine.Input.GetKeyDown(KeyCode.Space))
-                {
-                    PlayFirstAvailableCard();
-                }
-            }
+            // Update the state each frame
         }
 
         public void Exit()
         {
-        }
-
-        public void ConfirmDecision(CardColour claimedColour, List<CardID> chosenCards)
-        {
-            m_Board.TargetColour = claimedColour;
-            m_Fsm.SetState(new PlayState(m_Fsm, m_Board, chosenCards));
-        }
-
-        private void PlayFirstAvailableCard()
-        {
-            if (m_Board.PlayerHand.Count == 0) return;
-
-            var chosen = new List<CardID> { m_Board.PlayerHand[0] };
-            // Claim current target colour (or the card's own colour if pile is empty)
-            var claim = m_Board.PileSize == 0 ? chosen[0].Colour : m_Board.TargetColour;
-            ConfirmDecision(claim, chosen);
-        }
-
-        private void ExecuteAIDecision()
-        {
-            if (m_Board.OpponentHand.Count == 0) return;
-
-            const float fuzzyThreshold = 0.65f;
-            var isBluffing = EvaluateBluffRisk(m_Board) > fuzzyThreshold;
-            var chosenCards = new List<CardID>();
-            CardColour claimedColour;
-
-            if (m_Board.PileSize == 0)
-            {
-                // First play on empty pile: play any card honestly
-                var card = m_Board.OpponentHand[0];
-                chosenCards.Add(card);
-                claimedColour = card.Colour;
-            }
-            else if (!isBluffing)
-            {
-                // Honest attempt: look for a matching target colour in hand
-                for (int i = 0; i < m_Board.OpponentHand.Count; i++)
-                {
-                    if (m_Board.OpponentHand[i].Colour == m_Board.TargetColour)
-                    {
-                        chosenCards.Add(m_Board.OpponentHand[i]);
-                        break;
-                    }
-                }
-
-                if (chosenCards.Count > 0)
-                {
-                    claimedColour = m_Board.TargetColour;
-                }
-                else
-                {
-                    // No matching card found, must bluff with first available card
-                    chosenCards.Add(m_Board.OpponentHand[0]);
-                    claimedColour = m_Board.TargetColour;
-                }
-            }
-            else
-            {
-                // Bluff attempt: pick first card and claim current target colour
-                chosenCards.Add(m_Board.OpponentHand[0]);
-                claimedColour = m_Board.TargetColour;
-            }
-
-            ConfirmDecision(claimedColour, chosenCards);
         }
     }
 }

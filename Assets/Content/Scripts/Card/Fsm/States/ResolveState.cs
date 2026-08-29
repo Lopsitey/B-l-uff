@@ -26,7 +26,7 @@ namespace Template.Content.Scripts.Card.Fsm.States
         public void Enter()
         {
             Debug.Log(
-                $"[CardRound] Resolve.Enter: pile = {m_Board.PileSize}, challenged = {m_Board.LastPlayWasChallenged}, trust = {m_Board.TrustTowardPlayer:0.00}");
+                $"[CardRound] Resolve.Enter pile={m_Board.PileSize}, challenged={m_Board.LastPlayWasChallenged}, trust={m_Board.TrustTowardPlayer:0.00}");
 
             if (m_Board.LastPlayWasChallenged)
             {
@@ -39,13 +39,13 @@ namespace Template.Content.Scripts.Card.Fsm.States
             // 1. Check Win / Loss condition
             if (m_Board.PlayerHand.Count == 0)
             {
-                Debug.Log("[CardRound] *** PLAYER WINS THE ROUND! (Hand is empty) ***");
+                Debug.Log("[CardRound] Player has emptied their hand! Player wins the round!");
                 return;
             }
 
             if (m_Board.OpponentHand.Count == 0)
             {
-                Debug.Log($"[CardRound] *** {m_Board.GetOpponentLabel()} WINS THE ROUND! (Hand is empty) ***");
+                Debug.Log($"[CardRound] {m_Board.GetOpponentLabel()} has emptied their hand! Opponent wins the round!");
                 return;
             }
 
@@ -60,9 +60,6 @@ namespace Template.Content.Scripts.Card.Fsm.States
 
         private void ResolveChallenge()
         {
-            var activeSeat = m_Board.ActiveTurn;
-            var defendingSeat = activeSeat == TurnUser.Player ? TurnUser.Opponent : TurnUser.Player;
-
             // Determine if the active seat was telling the truth
             var wasBluff = false;
             for (var i = 0; i < m_Board.LastPlayedCards.Count; i++)
@@ -76,33 +73,16 @@ namespace Template.Content.Scripts.Card.Fsm.States
 
             if (wasBluff)
             {
-                Debug.Log($"[CardRound] Challenge SUCCEEDED! {activeSeat} was caught bluffing!");
-
-                if (activeSeat == TurnUser.Player)
+                Debug.Log($"[CardRound] Challenge SUCCEEDED! {m_Board.ActiveTurn} was caught bluffing!");
+                if (m_Board.ActiveTurn == TurnUser.Player)
                 {
                     m_Board.DecrementTrust();
                 }
-
-                // Apply debuff of the revealed fake card
-                if (m_Board.LastPlayedCards.Count > 0)
-                {
-                    Debuffs.ApplyCardDebuff(m_Board.LastPlayedCards[0]);
-                }
-
-                // Penalty: Liar draws 3 penalty cards from the draw stack
-                m_Board.DrawExtraCards(activeSeat, 3);
             }
             else
             {
-                Debug.Log($"[CardRound] Challenge FAILED! {activeSeat} was telling the truth!");
-
-                // Penalty: Wrongful challenger draws 3 penalty cards from the draw stack
-                m_Board.DrawExtraCards(defendingSeat, 3);
+                Debug.Log($"[CardRound] Challenge FAILED! {m_Board.ActiveTurn} was telling the truth!");
             }
-
-            // Clear the pot on challenge resolution
-            m_Board.PileSize = 0;
-            m_Board.LastPlayedCards.Clear();
         }
     }
 }
