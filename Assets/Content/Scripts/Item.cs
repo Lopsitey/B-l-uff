@@ -12,6 +12,15 @@ namespace Template
         public CardColour cardColour;
         public CardSuit cardSuit;
         private SpriteRenderer spriteRenderer;
+        [SerializeField]private SpriteRenderer backSpriteRenderer;
+
+        [SerializeField] private Sprite gemSprite;
+        [SerializeField] private Sprite powderSprite;
+        [SerializeField] private Sprite powderPaperSprite;
+        [SerializeField] private Sprite plantStemSprite;
+        [SerializeField] private Sprite flowerSprite;
+        [SerializeField] private Sprite boneSprite;
+        [SerializeField] private Sprite fleshSprite;
 
         private bool isSelected = false;
 
@@ -62,21 +71,25 @@ namespace Template
             }
 
 
-            //switch (cardSuit)
-            //{
-            //    case CardSuit.Gems:
-            //        spriteRenderer.sprite = Resources.Load<Sprite>("Sprites/Gem");
-            //        break;
-            //    case CardSuit.Flesh:
-            //        spriteRenderer.sprite = Resources.Load<Sprite>("Sprites/Flesh");
-            //        break;
-            //    case CardSuit.Flora:
-            //        spriteRenderer.sprite = Resources.Load<Sprite>("Sprites/Flora");
-            //        break;
-            //    case CardSuit.Vials:
-            //        spriteRenderer.sprite = Resources.Load<Sprite>("Sprites/Vial");
-            //        break;
-            //}
+            switch (cardSuit)
+            {
+                case CardSuit.Gems:
+                    spriteRenderer.sprite = gemSprite;
+                    backSpriteRenderer.color = new Color (0.5f, 0.5f, 0.5f, 0f); // invis
+                    break;
+                case CardSuit.Flesh:
+                    spriteRenderer.sprite = fleshSprite;
+                    backSpriteRenderer.sprite = boneSprite;
+                    break;
+                case CardSuit.Flora:
+                    spriteRenderer.sprite = flowerSprite;
+                    backSpriteRenderer.sprite = plantStemSprite;
+                    break;
+                case CardSuit.Vials:
+                    spriteRenderer.sprite = powderSprite;
+                    backSpriteRenderer.sprite = powderPaperSprite;
+                    break;
+            }
 
         }
 

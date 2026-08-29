@@ -64,6 +64,8 @@ namespace Template.Content.Scripts.Card.Fsm.States
             Debug.Log($"[CardRound] React.Challenge");
             m_Board.LastPlayWasChallenged = true;
             m_Fsm.SetState(new ResolveState(m_Fsm, m_Board));
+
+            GameManager.Instance.PlayerArmManager.RevealItem();
         }
 
         public void Pass()
@@ -72,6 +74,8 @@ namespace Template.Content.Scripts.Card.Fsm.States
 
             m_Board.LastPlayWasChallenged = false;
             m_Fsm.SetState(new ResolveState(m_Fsm, m_Board));
+
+            GameManager.Instance.PlayerArmManager.DropItem();
         }
 
         public void Exit()

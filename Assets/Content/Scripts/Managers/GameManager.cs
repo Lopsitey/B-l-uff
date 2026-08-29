@@ -39,6 +39,9 @@ namespace Template.Content.Scripts.Managers
 
         public DialogueManager DialogueManager;
 
+        public ArmManager PlayerArmManager;
+        public ArmManager OpponentArmManager;
+
         [SerializeField] private List<DialogueLine> introDialogue;
         [SerializeField] private List<DialogueLine> addItemDialogue;
         [SerializeField] private List<DialogueLine> AIaddItemDialogue;
@@ -76,7 +79,10 @@ namespace Template.Content.Scripts.Managers
             {
                 playState.CompletePlay();
                 Debug.Log($"[GameManager] Player finished their play with {m_SelectedCards.Count} cards.");
-                DialogueManager.SetNewDialogue(addItemDialogue);
+                //DialogueManager.SetNewDialogue(addItemDialogue);
+
+                PlayerArmManager.RaiseArm();
+
             }
             // Can also call player finish play dialogue here - adding an item etc
 
@@ -87,20 +93,29 @@ namespace Template.Content.Scripts.Managers
             if (m_Fsm.CurrentState is DecideState decideState && m_Blackboard.ActiveTurn == TurnUser.Player)
             {
                 decideState.ConfirmDecision(m_SelectedColour, m_SelectedCards);
+                FinishPlay();
             }
         }
 
         public void ChallengeOpponent() 
         {
             if (m_Fsm.CurrentState is ReactState reactState && m_Blackboard.ActiveTurn == TurnUser.Opponent)
+            {
+                OpponentArmManager.RevealItem();
                 reactState.Challenge();
+            }
             // Can also call player challenge dialogue here
         }
 
         public void Pass()
         {
             if (m_Fsm.CurrentState is ReactState reactState && m_Blackboard.ActiveTurn == TurnUser.Opponent)
+            {
+                
+                OpponentArmManager.DropItem();
                 reactState.Pass();
+            }
+
         }
 
 
@@ -132,6 +147,7 @@ namespace Template.Content.Scripts.Managers
 
         public void AIAddCards()
         {
+            OpponentArmManager.RaiseArm();
             DialogueManager.SetNewDialogue(AIaddItemDialogue);
         }
 

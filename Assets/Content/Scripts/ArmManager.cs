@@ -4,16 +4,27 @@ namespace Template
 {
     public class ArmManager : MonoBehaviour
     {
-        // Start is called once before the first execution of Update after the MonoBehaviour is created
-        void Start()
+        private Animator animator;
+        private void Awake()
         {
+            animator = GetComponent<Animator>();
+        }
+
+        public void RaiseArm()
+        {
+            animator.SetTrigger("Raise");
         
         }
 
-        // Update is called once per frame
-        void Update()
+        public void DropItem()
         {
-        
+            animator.SetTrigger("Drop");
+
+        }
+
+        public void RevealItem()
+        {
+            animator.SetTrigger("Reveal");
         }
     }
 }

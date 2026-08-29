@@ -77,6 +77,8 @@ namespace Template.Content.Scripts.Card.Fsm.States
             m_Board.TargetColour = claimedColour;
             // Clean transition into PlayState
             m_Fsm.SetState(new PlayState(m_Fsm, m_Board, chosenCards));
+
+            Debug.Log("CONFIRMED DECISION. ITEMS IN CAULDRON");
         }
 
         public void Exit()
