@@ -69,6 +69,7 @@ namespace Template.Content.Scripts.Card.Fsm.States
         public void Pass()
         {
             Debug.Log($"[CardRound] React.Pass");
+
             m_Board.LastPlayWasChallenged = false;
             m_Fsm.SetState(new ResolveState(m_Fsm, m_Board));
         }

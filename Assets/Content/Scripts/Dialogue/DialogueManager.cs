@@ -31,6 +31,7 @@ public class DialogueLine
 
 
 
+
 public class DialogueManager : MonoBehaviour
 {
     [Header("Dialogue")]
@@ -53,8 +54,11 @@ public class DialogueManager : MonoBehaviour
 
     private TMP_Text currentText;
 
-    private void Start()
+    public void SetNewDialogue(List<DialogueLine> newDialogueLines)
     {
+        dialogueLines = newDialogueLines;
+        currentLineIndex = 0;
+
         StartDialogue();
     }
 

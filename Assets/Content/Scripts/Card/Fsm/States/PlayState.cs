@@ -3,6 +3,7 @@
 using System.Collections.Generic;
 using Template.Content.Scripts.Card.Blackboard;
 using Template.Content.Scripts.Card.Data;
+using Template.Content.Scripts.Managers;
 using UnityEngine;
 
 #endregion
@@ -48,6 +49,8 @@ namespace Template.Content.Scripts.Card.Fsm.States
                 Debug.Log(
                     $"[CardRound] Opponent played {m_ChosenCards.Count} card/s of claimed colour {m_Board.TargetColour}");
                 m_Fsm.SetState(new ReactState(m_Fsm, m_Board));
+
+                GameManager.Instance.AIAddCards();
             }
         }
 

@@ -83,6 +83,7 @@ namespace Template.UI.Controllers
         private void OnStartClicked()
         {
             AudioManager.Instance?.PlayUiClick();
+
             gameObject.GetComponent<UIDocument>().enabled = false;
 
             StartCoroutine(StartupDelay(1f));
@@ -93,7 +94,7 @@ namespace Template.UI.Controllers
             yield return new WaitForSeconds(seconds);
             m_cameraCutscene.SetActive(true);
             yield return new WaitForSeconds(seconds);
-            m_dialogueManager.SetActive(true);
+            m_dialogueManager.GetComponent<DialogueManager>().StartDialogue();
             yield return new WaitForSeconds(73f);
             SceneManager.LoadScene("CardRound");
         }

@@ -37,16 +37,23 @@ namespace Template.Content.Scripts.Card.Fsm.States
             {
                 Debug.Log("[CardRound] Player has emptied their hand! Player wins the round!");
                 m_Fsm.SetState(null);
-                return;
+
                 GameManager.Instance.EndDialogue(true);
+
+
+
+                //GameManager.Instance.DialogueManager.StartDialogue(GameManager.Instance.m_AIProfile.m_Character.loseDialogue);
+                //Debug.Log(GameManager.Instance.m_AIProfile.m_Character.loseDialogue);
+
+                return;
             }
 
             if (m_Board.OpponentHand.Count == 0)
             {
                 Debug.Log($"[CardRound] {m_Board.GetOpponentLabel()} has emptied their hand! Opponent wins the round!");
                 m_Fsm.SetState(null);
-                return;
                 GameManager.Instance.EndDialogue(false);
+                return;
             }
 
             // If round continues, swap active seat and return to DecideState
@@ -78,6 +85,8 @@ namespace Template.Content.Scripts.Card.Fsm.States
                 Debug.Log($"[CardRound] Challenge SUCCEEDED! {m_Board.ActiveTurn} was caught bluffing!");
                 if (m_Board.ActiveTurn == TurnUser.Player)
                 {
+                    GameManager.Instance.AIDialogueChallengeCorrect();
+
                     // Lost trust as the player was caught
                     m_Board.ShiftTrust(false);
                     // Player was bluffing so they take the pile into their hand
@@ -85,18 +94,23 @@ namespace Template.Content.Scripts.Card.Fsm.States
                 }
                 else
                 {
+                    GameManager.Instance.ChallengeOpponentCorrect();
                     // Opponent was caught bluffing so they take the pile into their hand
                     m_Board.OpponentHand.AddRange(m_Board.Pile);
                 }
             }
             else if (m_Board.ActiveTurn == TurnUser.Player) // Not a bluff
             {
+                GameManager.Instance.ChallengeOpponentWrong();
+
                 Debug.Log($"[CardRound] Challenge FAILED! {m_Board.ActiveTurn} was telling the truth!");
                 // Player called bluff on opponent but opponent was honest, so player loses trust
                 m_Board.PlayerHand.AddRange(m_Board.Pile);
             }
             else
             {
+                GameManager.Instance.AIDialogueChallengeWrong();
+
                 Debug.Log($"[CardRound] Challenge FAILED! {m_Board.ActiveTurn} was telling the truth!");
                 // Opponent called bluff on player but player was honest, so opponent trusts the player more
                 m_Board.ShiftTrust(true);
