@@ -14,15 +14,14 @@ public class Lightning : MonoBehaviour
 
     private IEnumerator FlashLightning()
     {
-        if (spriteRenderer == null) yield break;
-
         while (true)
         {
             yield return new WaitForSeconds(Random.Range(2f, 7f));
-            if (spriteRenderer != null) spriteRenderer.color = new Color(1, 1, 1, 0.3f);
-            yield return new WaitForSeconds(Random.Range(0.1f, 0.4f));
-            if (spriteRenderer != null) spriteRenderer.color = new Color(1, 1, 1, 0);
+            spriteRenderer.color = new Color(1, 1, 1, 0.3f);
+            yield return new WaitForSeconds(Random.Range(0.2f, 0.6f));
+            spriteRenderer.color = new Color(1, 1, 1, 0);
         }
+
     }
 
 }
