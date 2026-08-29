@@ -20,8 +20,6 @@ namespace Template.Content.Scripts.Managers
     /// </summary>
     public sealed class GameManager : Singleton<GameManager>
     {
-        private const int CardsPerRow = 4;
-
         [Tooltip("Required. Fuzzy profile for the god you face this round.")]
         [FormerlySerializedAs("m_OpponentProfile")]
         [SerializeField]
@@ -35,10 +33,6 @@ namespace Template.Content.Scripts.Managers
         private AIFuzzyBrain m_Fuzzy;
         private FSM m_Fsm;
 
-        private readonly List<CardID> m_Selection = new List<CardID>(4);
-        private CardColour m_PendingClaim;
-        private ICardRoundState m_LastSeenState;
-
         internal GameBlackboard Blackboard => m_Blackboard;
         internal FSM Fsm => m_Fsm;
 
@@ -49,17 +43,7 @@ namespace Template.Content.Scripts.Managers
             BeginRound();
         }
 
-        private void Update()
-        {
-            m_Fsm?.Tick();
-
-            // A selection only makes sense for the play being built, so drop it whenever the phase moves on
-            if (m_Fsm?.Current == m_LastSeenState) return;
-
-            m_LastSeenState = m_Fsm?.Current;
-            m_Selection.Clear();
-            if (m_Blackboard != null) m_PendingClaim = m_Blackboard.TargetColour;
-        }
+        private void Update() => m_Fsm?.Tick();
 
         private void BeginRound()
         {
@@ -67,8 +51,6 @@ namespace Template.Content.Scripts.Managers
             m_Fuzzy = new AIFuzzyBrain();
             m_Blackboard = new GameBlackboard(m_AIProfile);
             m_Fsm = new FSM(m_Blackboard, m_Fuzzy);
-            m_Selection.Clear();
-            m_PendingClaim = m_Blackboard.TargetColour;
             m_Fsm.SetState(new DecideState(m_Fsm, m_Blackboard));
             Debug.Log($"[GameManager] Round started vs {m_AIProfile.DisplayName}.");
         }
@@ -89,33 +71,46 @@ namespace Template.Content.Scripts.Managers
             return false;
         }
 
-        // A debug overlay I found online because I CBA
         private void OnGUI()
         {
             if (!m_ShowDebugOverlay || m_Blackboard == null) return;
 
-            var label = new GUIStyle(GUI.skin.label) { richText = true };
+            const int panelWidth = 320;
+            const int panelHeight = 270;
+            GUILayout.BeginArea(new Rect(10, 10, panelWidth, panelHeight), GUI.skin.box);
 
-            GUILayout.BeginArea(new Rect(10, 10, 420, 480), GUI.skin.box);
+            GUILayout.Label($"<b>Round vs:</b> {m_Blackboard.GetOpponentLabel()}");
+            GUILayout.Label($"<b>Active Turn:</b> {m_Blackboard.ActiveTurn}");
+            GUILayout.Label($"<b>Current Target Colour:</b> {m_Blackboard.TargetColour}");
+            GUILayout.Label($"<b>Pot / Pile Size:</b> {m_Blackboard.PileSize}");
+            GUILayout.Label($"<b>Trust toward Player:</b> {m_Blackboard.TrustTowardPlayer:0.00}");
+            GUILayout.Label($"<b>Draw Stack Remaining:</b> {m_Blackboard.DiscardHistory?.Count ?? 0}");
+            GUILayout.Label($"<b>Player Hand ({m_Blackboard.PlayerHand.Count}):</b>");
 
-            GUILayout.Label($"<b>Round vs:</b> {m_Blackboard.GetOpponentLabel()}", label);
-            GUILayout.Label($"<b>Active Turn:</b> {m_Blackboard.ActiveTurn}", label);
-            GUILayout.Label(
-                m_Blackboard.PileIsOpen
-                    ? "<b>Claim on pot:</b> none, the pot is open"
-                    : $"<b>Claim on pot:</b> {m_Blackboard.TargetColour}  (playable: {m_Blackboard.TargetColour.Step(-1)} / {m_Blackboard.TargetColour} / {m_Blackboard.TargetColour.Step(1)})",
-                label);
-            GUILayout.Label($"<b>Pot:</b> {m_Blackboard.PileSize} cards", label);
-            GUILayout.Label($"<b>Trust toward Player:</b> {m_Blackboard.TrustTowardPlayer:0.00}", label);
-            GUILayout.Label($"<b>Penalty Stack:</b> {m_Blackboard.DrawStack?.Count ?? 0}", label);
-            GUILayout.Label($"<b>Opponent Hand:</b> {m_Blackboard.OpponentHand.Count} cards", label);
-            GUILayout.Label($"<b>Opponent caught lying:</b> {m_Blackboard.OpponentBluffRateObserved:P0}", label);
+            // Display player's cards
+            GUILayout.BeginHorizontal();
+            var maxCardsToShow = Mathf.Min(6, m_Blackboard.PlayerHand.Count);
+            for (int i = 0; i < maxCardsToShow; i++)
+            {
+                var card = m_Blackboard.PlayerHand[i];
+                if (GUILayout.Button($"{card.Colour}\n{card.Suit}", GUILayout.Width(46), GUILayout.Height(40)))
+                {
+                    if (m_Blackboard.ActiveTurn == TurnUser.Player)
+                    {
+                        var chosen = new List<CardID> { card };
+                        var claim = m_Blackboard.PileSize == 0 ? card.Colour : m_Blackboard.TargetColour;
+                        m_Fsm.SetState(new PlayState(m_Fsm, m_Blackboard, chosen));
+                    }
+                }
+            }
+            if (m_Blackboard.PlayerHand.Count > 6)
+            {
+                GUILayout.Label($"+{m_Blackboard.PlayerHand.Count - 6} more");
+            }
+            GUILayout.EndHorizontal();
 
-            GUILayout.Space(4);
-            DrawPhaseControls(label);
-
-            GUILayout.Space(4);
-            GUILayout.Label("Keys: [Space] quick play / pass, [C] challenge, [P] pass", label);
+            GUILayout.Space(5);
+            GUILayout.Label($"<b>Opponent Hand Count:</b> {m_Blackboard.OpponentHand.Count}");
 
             if (GUILayout.Button("Restart Round"))
             {
@@ -123,119 +118,6 @@ namespace Template.Content.Scripts.Managers
             }
 
             GUILayout.EndArea();
-        }
-
-        /// <summary>
-        ///     Routes overlay clicks through the same entry points the keyboard uses, so both paths behave identically.
-        /// </summary>
-        private void DrawPhaseControls(GUIStyle label)
-        {
-            switch (m_Fsm?.Current)
-            {
-                case DecideState decide when decide.AwaitingPlayerChoice:
-                    DrawClaimPicker(label);
-                    DrawHandPicker(label);
-                    DrawPlayButton(decide);
-                    break;
-
-                case ReactState react when react.AwaitingPlayerReaction:
-                    GUILayout.Label(
-                        $"<b>Opponent played {m_Blackboard.LastPlayedCards.Count} card(s) claiming {m_Blackboard.TargetColour}. Believe them?</b>",
-                        label);
-                    GUILayout.BeginHorizontal();
-                    if (GUILayout.Button("Challenge (C)", GUILayout.Height(30)))
-                    {
-                        react.Respond(true);
-                    }
-
-                    if (GUILayout.Button("Pass (P)", GUILayout.Height(30)))
-                    {
-                        react.Respond(false);
-                    }
-
-                    GUILayout.EndHorizontal();
-                    break;
-
-                case ResolveState resolve when resolve.RevealSummary != null:
-                    GUILayout.Label($"<b>{resolve.RevealSummary}</b>", label);
-                    break;
-
-                case null:
-                    GUILayout.Label(
-                        m_Blackboard.RoundWinner == TurnUser.Player
-                            ? "<b>You won the round.</b> Press Restart Round."
-                            : $"<b>{m_Blackboard.GetOpponentLabel()} won the round.</b> Press Restart Round.",
-                        label);
-                    break;
-
-                default:
-                    GUILayout.Label("<b>Opponent is thinking...</b>", label);
-                    break;
-            }
-        }
-
-        /// <summary>Only legal claims are offered, so the wheel rule cannot be broken from the UI.</summary>
-        private void DrawClaimPicker(GUIStyle label)
-        {
-            GUILayout.Label("<b>Claim:</b>", label);
-
-            var claims = m_Blackboard.GetLegalClaims();
-            for (int i = 0; i < claims.Length; i++)
-            {
-                if (i % CardsPerRow == 0) GUILayout.BeginHorizontal();
-
-                var isPicked = claims[i] == m_PendingClaim;
-                if (GUILayout.Button(isPicked ? $"[{claims[i]}]" : claims[i].ToString(), GUILayout.Height(26)))
-                {
-                    m_PendingClaim = claims[i];
-                }
-
-                var isRowEnd = i % CardsPerRow == CardsPerRow - 1 || i == claims.Length - 1;
-                if (isRowEnd) GUILayout.EndHorizontal();
-            }
-
-            if (!m_Blackboard.IsLegalClaim(m_PendingClaim)) m_PendingClaim = claims[0];
-        }
-
-        private void DrawHandPicker(GUIStyle label)
-        {
-            var hand = m_Blackboard.PlayerHand;
-            GUILayout.Label($"<b>Your hand ({hand.Count})</b> - click to select:", label);
-
-            for (int i = 0; i < hand.Count; i++)
-            {
-                if (i % CardsPerRow == 0) GUILayout.BeginHorizontal();
-
-                var card = hand[i];
-                var isSelected = m_Selection.Contains(card);
-                var caption = isSelected ? $"* {card.Colour}\n{card.Suit}" : $"{card.Colour}\n{card.Suit}";
-
-                if (GUILayout.Button(caption, GUILayout.Width(92), GUILayout.Height(40)))
-                {
-                    if (isSelected) m_Selection.Remove(card);
-                    else m_Selection.Add(card);
-                }
-
-                var isRowEnd = i % CardsPerRow == CardsPerRow - 1 || i == hand.Count - 1;
-                if (isRowEnd) GUILayout.EndHorizontal();
-            }
-        }
-
-        private void DrawPlayButton(DecideState decide)
-        {
-            var canPlay = m_Selection.Count > 0;
-            GUI.enabled = canPlay;
-
-            var caption = canPlay
-                ? $"Play {m_Selection.Count} card(s) as {m_PendingClaim}"
-                : "Select at least one card";
-
-            if (GUILayout.Button(caption, GUILayout.Height(30)))
-            {
-                decide.ConfirmDecision(m_PendingClaim, new List<CardID>(m_Selection));
-            }
-
-            GUI.enabled = true;
         }
     }
 }

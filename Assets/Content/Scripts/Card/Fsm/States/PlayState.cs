@@ -27,21 +27,24 @@ namespace Template.Content.Scripts.Card.Fsm.States
 
         public void Enter()
         {
-            var activeHand = m_Board.GetHand(m_Board.ActiveTurn);
+            var activeHand = m_Board.ActiveTurn == TurnUser.Player ? m_Board.PlayerHand : m_Board.OpponentHand;
 
+            // Clear the prior turn's played cards
             m_Board.LastPlayedCards.Clear();
 
+            // Remove chosen cards from the active player's hand
             for (int i = 0; i < m_ChosenCards.Count; i++)
             {
-                // Only cards genuinely in hand may be committed, so a stale UI selection cannot duplicate a card
-                if (!activeHand.Remove(m_ChosenCards[i])) continue;
-
-                m_Board.LastPlayedCards.Add(m_ChosenCards[i]);
-                m_Board.Pile.Add(m_ChosenCards[i]);
+                activeHand.Remove(m_ChosenCards[i]);
             }
 
-            Debug.Log(
-                $"[CardRound] {m_Board.ActiveTurn} committed {m_Board.LastPlayedCards.Count} card(s) claimed as {m_Board.TargetColour}. Pot is now {m_Board.PileSize}.");
+            // Stage the chosen cards onto the blackboard
+            m_Board.LastPlayedCards.AddRange(m_ChosenCards);
+
+            // Update the pile size
+            m_Board.PileSize += m_Board.LastPlayedCards.Count;
+
+            Debug.Log($"[CardRound] Play.Enter: {m_Board.ActiveTurn} committed {m_ChosenCards.Count} card(s) claimed as {m_Board.TargetColour}. Total Pile: {m_Board.PileSize}");
         }
 
         public void Tick()
