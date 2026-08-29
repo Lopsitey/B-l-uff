@@ -6,7 +6,7 @@ using Template.Content.Scripts.Card.Blackboard;
 
 namespace Template.Content.Scripts.Card.Fuzzy
 {
-    internal sealed class AIFuzzyBrain
+    internal static class AIFuzzyBrainUtil
     {
         /// <summary>
         ///     Urge to call the player's bluff (0 to 1).
@@ -18,7 +18,7 @@ namespace Template.Content.Scripts.Card.Fuzzy
                 1f - board
                     .TrustTowardPlayer; // Cancels out if the player has been honest as the trust would increase - 0.5 by default  
             var history = board.PlayerBluffRateObserved; // Times the player was caught bluffing this round (0 to 1-ish)
-            var pilePressure = Clamp01(board.PileSize / 10f); // How many cards are in the pile (0 to 1)
+            var pilePressure = Clamp01(board.Pile.Count / 10f); // How many cards are in the pile (0 to 1)
 
             var intelligence = board.AIProfile.CallChance;
             var totalScore = (distrust * 0.4f) + (history * 0.3f) + (pilePressure * 0.2f) + (intelligence * 0.1f);

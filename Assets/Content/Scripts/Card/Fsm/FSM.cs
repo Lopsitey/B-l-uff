@@ -1,10 +1,3 @@
-#region
-
-using Template.Content.Scripts.Card.Blackboard;
-using Template.Content.Scripts.Card.Fuzzy;
-
-#endregion
-
 namespace Template.Content.Scripts.Card.Fsm
 {
     /// <summary>
@@ -12,17 +5,7 @@ namespace Template.Content.Scripts.Card.Fsm
     /// </summary>
     internal sealed class FSM
     {
-        // Private properties for this class
-        private readonly GameBlackboard m_Blackboard;
-        private readonly AIFuzzyBrain m_Fuzzy;
-        private ICardRoundState m_Current;
-
-        // Properties filled when the object is constructed.
-        public FSM(GameBlackboard blackboard, AIFuzzyBrain fuzzy)
-        {
-            m_Blackboard = blackboard;
-            m_Fuzzy = fuzzy;
-        }
+        public ICardRoundState CurrentState { get; private set; }
 
         /// <summary>
         ///     Exits the current state and enters the next state.
@@ -30,11 +13,9 @@ namespace Template.Content.Scripts.Card.Fsm
         /// <param name="next">The state queued to be entered.</param>
         public void SetState(ICardRoundState next)
         {
-            m_Current?.Exit();
-            m_Current = next;
-            m_Current?.Enter();
+            CurrentState?.Exit();
+            CurrentState = next;
+            CurrentState?.Enter();
         }
-
-        public void Tick() => m_Current?.Tick();
     }
 }

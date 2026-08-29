@@ -3,6 +3,7 @@
 using Template.Content.Scripts.Card.Blackboard;
 using Template.Content.Scripts.Card.Data;
 using Template.Content.Scripts.Card.Fuzzy;
+using Template.Content.Scripts.Managers;
 using UnityEngine;
 
 #endregion
@@ -10,7 +11,8 @@ using UnityEngine;
 namespace Template.Content.Scripts.Card.Fsm.States
 {
     /// <summary>
-    ///     Gives the defender (non-active seat) the opportunity to call the bluff or pass.
+    ///     Handles interaction between the active player and the idle player.
+    ///     Gives the idle player the opportunity to call the bluff or pass.
     /// </summary>
     internal sealed class ReactState : ICardRoundState
     {
@@ -25,28 +27,49 @@ namespace Template.Content.Scripts.Card.Fsm.States
 
         public void Enter()
         {
-            Debug.Log($"[CardRound] React.Enter defender vs {m_Board.GetOpponentLabel()}");
+            Debug.Log($"[CardRound] React.Enter");
 
-            if (m_Board.ActiveTurn == TurnUser.Player)
+            if (m_Board.ActiveTurn == TurnUser.Player) // Opponent reacts to player (currently trying to play card/s)
             {
-                Debug.Log($"[CardRound] call chance = {AIFuzzyBrain.EvaluateCallChance(m_Board):0.00}");
+                Debug.Log($"Opponent vs {m_Board.GetOpponentLabel()}");
+
                 // Player played: opponent reacts using fuzzy evaluation
-                var urge = AIFuzzyBrain.EvaluateCallChance(m_Board);
+                Debug.Log($"[CardRound] call chance = {AIFuzzyBrainUtil.EvaluateCallChance(m_Board):0.00}");
+                var urge = AIFuzzyBrainUtil.EvaluateCallChance(m_Board);
                 const float callThreshold = 0.5f;
                 m_Board.LastPlayWasChallenged = urge >= callThreshold;
-                Debug.Log(
-                    $"[CardRound] opponent call urge = {urge:0.00}, challenged = {m_Board.LastPlayWasChallenged}");
+
+                if (m_Board.LastPlayWasChallenged)
+                {
+                    Debug.Log(
+                        $"[CardRound] opponent call urge = {urge:0.00}, challenged = {m_Board.LastPlayWasChallenged}");
+                    GameManager.Instance.AIDialogueChallenge();
+                }
+                else
+                    Debug.Log(
+                        $"[CardRound] opponent call urge = {urge:0.00}, {m_Board.GetOpponentLabel()} passed on Player's play");
+
+                m_Fsm.SetState(new ResolveState(m_Fsm, m_Board));
             }
             else
             {
-                // Opponent played: player reacts (defaulting to false until UI hook connected)
+                // Player reacts to opponent (currently trying to play card/s)
+                Debug.Log($"Player vs {m_Board.GetOpponentLabel()}");
                 m_Board.LastPlayWasChallenged = false;
             }
         }
 
-        public void Tick()
+        public void Challenge()
         {
-            // Option B: Always transition to ResolveState to evaluate turn outcome centrally
+            Debug.Log($"[CardRound] React.Challenge");
+            m_Board.LastPlayWasChallenged = true;
+            m_Fsm.SetState(new ResolveState(m_Fsm, m_Board));
+        }
+
+        public void Pass()
+        {
+            Debug.Log($"[CardRound] React.Pass");
+            m_Board.LastPlayWasChallenged = false;
             m_Fsm.SetState(new ResolveState(m_Fsm, m_Board));
         }
 

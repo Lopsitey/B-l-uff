@@ -31,7 +31,22 @@ namespace Template.Content.Scripts.Card.Data
             Colour = colour;
         }
 
+        /// <summary>
+        ///     Checks if the card's colour is within the threshold of the target colour.
+        /// </summary>
+        /// <param name="target">The target colour to check against.</param>
+        /// <returns>True if the card's colour is within the threshold, false otherwise.</returns>
+        public bool IsColourOutsideThreshold(CardColour target)
+        {
+            // +6 is the same as -1 due to the wrap around the modulo allows
+            // Can't be negative as the modulo would return negative
+            var lower = (CardColour)(((int)Colour + 6) % 7);
+            var higher = (CardColour)(((int)Colour + 1) % 7);
+            return Colour != target && lower != target && higher != target;
+        }
+
         public CardSuit Suit { get; }
+
         public CardColour Colour { get; }
     }
 }

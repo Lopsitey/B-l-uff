@@ -24,11 +24,8 @@ namespace Template.Content.Scripts.Card.Blackboard
 
         public TurnUser ActiveTurn { get; set; } = TurnUser.Player;
 
-        //TODO must be +-1 inclusive of the current colour in play - that includes wrap-around from 6 to 0
         /// <summary>Claimed target colour for the current pile play.</summary>
         public CardColour TargetColour { get; set; }
-
-        public int PileSize { get; set; }
 
         /// <summary>Whether the last play was challenged by the defending seat.</summary>
         public bool LastPlayWasChallenged { get; set; }
@@ -52,7 +49,7 @@ namespace Template.Content.Scripts.Card.Blackboard
 
         public List<CardID> OpponentHand { get; } = new List<CardID>(28);
 
-        public Stack<CardID> DiscardHistory { get; set; }
+        public List<CardID> Pile { get; } = new List<CardID>(28);
 
         public void ResetForNewRound(AIFuzzyProfile profile)
         {
@@ -61,7 +58,6 @@ namespace Template.Content.Scripts.Card.Blackboard
 
             AIProfile = profile;
             ActiveTurn = TurnUser.Player;
-            PileSize = 0;
             LastPlayWasChallenged = false;
             TrustTowardPlayer = profile.StartingTrust;
             PlayerBluffRateObserved = 0.25f;
@@ -70,31 +66,23 @@ namespace Template.Content.Scripts.Card.Blackboard
             LastPlayedCards.Clear();
             PlayerHand.Clear();
             OpponentHand.Clear();
-            DiscardHistory.Clear();
+            Pile.Clear();
             InitialDraw();
         }
 
         public void SwapActiveTurn()
-        {
-            ActiveTurn = ActiveTurn == TurnUser.Player ? TurnUser.Opponent : TurnUser.Player;
-        }
+            => ActiveTurn = ActiveTurn == TurnUser.Player ? TurnUser.Opponent : TurnUser.Player;
 
-        public void DecrementTrust()
+
+        public void ShiftTrust(bool shiftUp)
         {
-            TrustTowardPlayer -= AIProfile.DistrustPerLie;
+            // Increments the trust toward the player if the opponent was wrong, decrements if the opponent was right
+            // As the player was honest so the opponent should trust them more, and vice versa
+            if (shiftUp)
+                TrustTowardPlayer += AIProfile.DistrustPerLie;
+            else
+                TrustTowardPlayer -= AIProfile.DistrustPerLie;
             TrustTowardPlayer = Math.Clamp(TrustTowardPlayer, 0f, 1f);
-        }
-
-        /// <summary>
-        ///     Draws up to cards from DiscardHistory/draw stack into the specified hand.
-        ///     <param name="user">The player whose hand to draw into.</param>
-        ///     <param name="count">The number of cards to draw.</param>
-        /// </summary>
-        public void DrawExtraCards(TurnUser user, int count = 3)
-        {
-            var hand = user == TurnUser.Player ? PlayerHand : OpponentHand;
-            for (int i = 0; i < count && DiscardHistory.Count > 0; ++i)
-                hand.Add(DiscardHistory.Pop());
         }
 
         /// <summary>
@@ -111,7 +99,7 @@ namespace Template.Content.Scripts.Card.Blackboard
             OpponentHand.AddRange(new ArraySegment<CardID>(deck, 12, 12));
 
             // Wrap the remaining 4 cards directly into a Stack for drawing
-            DiscardHistory = new Stack<CardID>(new ArraySegment<CardID>(deck, 24, 4));
+            Pile.AddRange((new ArraySegment<CardID>(deck, 24, 4)));
         }
 
         /// <summary>
