@@ -1,9 +1,14 @@
+#region
+
 using System.Collections.Generic;
 using Template.Content.Scripts.Card.Data;
+using Template.Content.Scripts.Card.Fsm.States;
 using Template.Content.Scripts.Managers;
 using UnityEngine;
 
-namespace Template
+#endregion
+
+namespace Template.Content.Scripts
 {
     public class Item : MonoBehaviour
     {
@@ -12,7 +17,7 @@ namespace Template
         public CardColour cardColour;
         public CardSuit cardSuit;
         private SpriteRenderer spriteRenderer;
-        [SerializeField]private SpriteRenderer backSpriteRenderer;
+        [SerializeField] private SpriteRenderer backSpriteRenderer;
 
         [SerializeField] private Sprite gemSprite;
         [SerializeField] private Sprite powderSprite;
@@ -35,7 +40,8 @@ namespace Template
             SetSortingOrder(sortingOrder);
         }
 
-        public void ApplySelectedVisuals(bool selected, int selectedIndex = 0, int totalSelected = 1, Transform heldContainer = null, float spacing = 1.5f)
+        public void ApplySelectedVisuals(bool selected, int selectedIndex = 0, int totalSelected = 1,
+            Transform heldContainer = null, float spacing = 1.5f)
         {
             isSelected = selected;
             if (selected)
@@ -68,7 +74,8 @@ namespace Template
             var tint = greyed ? new Color(0.55f, 0.55f, 0.55f, 1f) : Color.white;
             if (spriteRenderer != null)
                 spriteRenderer.color = tint;
-            if (backSpriteRenderer != null)
+
+            if (backSpriteRenderer != null && backSpriteRenderer.sprite != null)
                 backSpriteRenderer.color = tint;
         }
 
@@ -80,10 +87,14 @@ namespace Template
 
         private void OnMouseDown()
         {
-            if (GameManager.Instance != null && GameManager.Instance.m_DialogueManager != null && GameManager.Instance.m_DialogueManager.WasDialogueActiveRecently)
+            if (GameManager.Instance != null && GameManager.Instance.m_DialogueManager != null &&
+                GameManager.Instance.m_DialogueManager.WasDialogueActiveRecently)
                 return;
 
-            if (GameManager.Instance == null || GameManager.Instance.CurrentState is not Template.Content.Scripts.Card.Fsm.States.DecideState || GameManager.Instance.ActiveTurn != TurnUser.Player)
+            if (GameManager.Instance == null ||
+                GameManager.Instance.IsActionInProgress ||
+                GameManager.Instance.CurrentState is not DecideState ||
+                GameManager.Instance.ActiveTurn != TurnUser.Player)
                 return;
 
             Debug.Log($"Clicked on {cardColour} {cardSuit} card.");
@@ -162,36 +173,92 @@ namespace Template
                     break;
             }
 
-            if (backSpriteRenderer != null)
+            switch (cardSuit)
             {
-                // Ensure back sprite is consistently rendered behind the front sprite
-                backSpriteRenderer.sortingLayerID = spriteRenderer.sortingLayerID;
-                backSpriteRenderer.sortingOrder = spriteRenderer.sortingOrder - 1;
-
-                switch (cardSuit)
-                {
-                    case CardSuit.Gems:
-                        spriteRenderer.sprite = gemSprite;
+                case CardSuit.Gems:
+                    spriteRenderer.sprite = gemSprite;
+                    if (backSpriteRenderer != null)
+                    {
+                        backSpriteRenderer.sprite = null;
                         backSpriteRenderer.color = new Color(0.5f, 0.5f, 0.5f, 0f); // invis
-                        break;
-                    case CardSuit.Flesh:
-                        spriteRenderer.sprite = fleshSprite;
+                    }
+
+                    break;
+                case CardSuit.Flesh:
+                    spriteRenderer.sprite = fleshSprite;
+                    if (backSpriteRenderer != null)
+                    {
                         backSpriteRenderer.sprite = boneSprite;
                         backSpriteRenderer.color = Color.white;
-                        break;
-                    case CardSuit.Flora:
-                        spriteRenderer.sprite = flowerSprite;
+                    }
+
+                    break;
+                case CardSuit.Flora:
+                    spriteRenderer.sprite = flowerSprite;
+                    if (backSpriteRenderer != null)
+                    {
                         backSpriteRenderer.sprite = plantStemSprite;
                         backSpriteRenderer.color = Color.white;
-                        break;
-                    case CardSuit.Vials:
-                        spriteRenderer.sprite = powderSprite;
+                    }
+
+                    break;
+                case CardSuit.Vials:
+                    spriteRenderer.sprite = powderSprite;
+                    if (backSpriteRenderer != null)
+                    {
                         backSpriteRenderer.sprite = powderPaperSprite;
                         backSpriteRenderer.color = Color.white;
-                        break;
+                    }
+
+                    break;
+            }
+
+            UpdatePhysicsCollider();
+        }
+
+        private void UpdatePhysicsCollider()
+        {
+            var polyCol = GetComponent<PolygonCollider2D>();
+            if (polyCol == null)
+                polyCol = gameObject.AddComponent<PolygonCollider2D>();
+
+            var boxCol = GetComponent<BoxCollider2D>();
+            if (boxCol != null)
+                Destroy(boxCol);
+
+            // For Vials (powder), use only the paper sprite's physics shape to avoid subtractive overlapping cutouts
+            var sprite = cardSuit == CardSuit.Vials ? null : (spriteRenderer != null ? spriteRenderer.sprite : null);
+            var backSprite = (backSpriteRenderer != null && backSpriteRenderer.color.a > 0.01f)
+                ? backSpriteRenderer.sprite
+                : null;
+
+            var pathCount = 0;
+            if (sprite != null) pathCount += sprite.GetPhysicsShapeCount();
+            if (backSprite != null) pathCount += backSprite.GetPhysicsShapeCount();
+
+            polyCol.pathCount = pathCount;
+            var currentPathIndex = 0;
+            var shapePoints = new List<Vector2>();
+
+            if (sprite != null)
+            {
+                for (var i = 0; i < sprite.GetPhysicsShapeCount(); i++)
+                {
+                    shapePoints.Clear();
+                    sprite.GetPhysicsShape(i, shapePoints);
+                    polyCol.SetPath(currentPathIndex++, shapePoints);
+                }
+            }
+
+            if (backSprite != null)
+            {
+                for (var i = 0; i < backSprite.GetPhysicsShapeCount(); i++)
+                {
+                    shapePoints.Clear();
+                    backSprite.GetPhysicsShape(i, shapePoints);
+                    polyCol.SetPath(currentPathIndex++, shapePoints);
                 }
             }
         }
-
     }
 }

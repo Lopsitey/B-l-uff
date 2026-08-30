@@ -1,5 +1,6 @@
 #region
 
+using System.Collections;
 using System.Collections.Generic;
 using Template.Content.Scripts.Card.Blackboard;
 using Template.Content.Scripts.Card.Data;
@@ -32,12 +33,17 @@ namespace Template.Content.Scripts.Managers
 
         public int SelectedCardsCount => m_SelectedCards.Count;
 
+        public CardColour SelectedColour => m_SelectedColour;
+
         public bool LastPlayWasChallenged => m_Blackboard.LastPlayWasChallenged;
+
+        public bool IsActionInProgress => m_IsActionInProgress;
 
         public ICardRoundState CurrentState => m_Fsm?.CurrentState;
 
         private GameBlackboard m_Blackboard;
         private FSM m_Fsm;
+        private bool m_IsActionInProgress;
 
         [Header("Managers")] [SerializeField] public DialogueManager m_DialogueManager;
         public ArmManager m_PlayerArmManager;
@@ -176,11 +182,12 @@ namespace Template.Content.Scripts.Managers
 
         public void OnCardSelected(Item item)
         {
-            if (item == null) return;
+            if (item == null || m_IsActionInProgress) return;
             if (!m_SelectedItems.Contains(item))
             {
                 m_SelectedItems.Add(item);
                 m_SelectedCards.Add(new CardID(item.cardSuit, item.cardColour));
+                m_SelectedColour = item.cardColour;
             }
 
             UpdateHeldItemsLayout();
@@ -188,13 +195,18 @@ namespace Template.Content.Scripts.Managers
 
         public void OnCardDeselected(Item item)
         {
-            if (item == null) return;
+            if (item == null || m_IsActionInProgress) return;
             if (m_SelectedItems.Contains(item))
             {
                 m_SelectedItems.Remove(item);
                 m_SelectedCards.Remove(new CardID(item.cardSuit, item.cardColour));
                 item.Deselect();
             }
+
+            if (m_SelectedItems.Count > 0)
+                m_SelectedColour = m_SelectedItems[0].cardColour;
+            else if (m_Blackboard != null)
+                m_SelectedColour = m_Blackboard.TargetColour;
 
             UpdateHeldItemsLayout();
         }
@@ -209,6 +221,7 @@ namespace Template.Content.Scripts.Managers
 
         public void DeselectAllCards()
         {
+            if (m_IsActionInProgress) return;
             m_SelectedCards.Clear();
             foreach (var item in m_SelectedItems)
             {
@@ -217,6 +230,8 @@ namespace Template.Content.Scripts.Managers
             }
 
             m_SelectedItems.Clear();
+            if (m_Blackboard != null)
+                m_SelectedColour = m_Blackboard.TargetColour;
         }
 
         public void OnCardAdded(CardColour colour, CardSuit suit)
@@ -234,20 +249,16 @@ namespace Template.Content.Scripts.Managers
             if (m_Fsm.CurrentState is PlayState playState && m_Blackboard.ActiveTurn == TurnUser.Player)
             {
                 playState.CompletePlay();
-                Debug.Log($"[GameManager] Player finished their play with {m_SelectedCards.Count} cards.");
-
-                if (m_DialogueManager != null && m_PlayerAddedItemDialogue != null &&
-                    m_PlayerAddedItemDialogue.Count > 0)
-                    m_DialogueManager.SetNewDialogue(m_PlayerAddedItemDialogue);
-
-                if (m_PlayerArmManager != null)
-                    m_PlayerArmManager.RaiseArm();
+                Debug.Log($"[GameManager] Player finished their play.");
             }
         }
 
         public void ConfirmPlayerDecision()
         {
             if (m_DialogueManager != null && m_DialogueManager.WasDialogueActiveRecently)
+                return;
+
+            if (m_IsActionInProgress)
                 return;
 
             if (m_SelectedCards.Count == 0)
@@ -259,11 +270,47 @@ namespace Template.Content.Scripts.Managers
 
             if (m_Fsm.CurrentState is DecideState decideState && m_Blackboard.ActiveTurn == TurnUser.Player)
             {
-                var playedCardsCopy = new List<CardID>(m_SelectedCards);
-                decideState.ConfirmDecision(m_SelectedColour, m_SelectedCards);
-                RemovePlayedItems(playedCardsCopy);
-                FinishPlay();
+                StartCoroutine(PlayerPlayRoutine(decideState));
             }
+        }
+
+        private IEnumerator PlayerPlayRoutine(DecideState decideState)
+        {
+            m_IsActionInProgress = true;
+
+            if (m_PlayerArmManager != null)
+                m_PlayerArmManager.RaiseArm();
+
+            if (m_DialogueManager != null && m_PlayerAddedItemDialogue != null &&
+                m_PlayerAddedItemDialogue.Count > 0)
+                m_DialogueManager.SetNewDialogue(m_PlayerAddedItemDialogue);
+
+            yield return new WaitForSeconds(0.1f);
+
+            var playedCardsCopy = new List<CardID>(m_SelectedCards);
+            var chosenColour = m_SelectedColour;
+
+            RemovePlayedItemsDirectly();
+
+            m_IsActionInProgress = false;
+
+            decideState.ConfirmDecision(chosenColour, playedCardsCopy);
+            FinishPlay();
+        }
+
+        private void RemovePlayedItemsDirectly()
+        {
+            foreach (var item in m_SelectedItems)
+            {
+                if (item != null)
+                {
+                    m_SpawnedHandItems.Remove(item);
+                    Destroy(item.gameObject);
+                }
+            }
+
+            m_SelectedItems.Clear();
+            m_SelectedCards.Clear();
         }
 
         public void ChallengeOpponent()
@@ -359,8 +406,10 @@ namespace Template.Content.Scripts.Managers
 
         private void BeginRound()
         {
+            m_IsActionInProgress = false;
             // Instantiates the round blackboard and FSM
             m_Blackboard = new GameBlackboard(m_AIProfile);
+            m_SelectedColour = m_Blackboard.TargetColour;
             m_Fsm = new FSM();
             m_Fsm.SetState(new DecideState(m_Fsm, m_Blackboard));
 

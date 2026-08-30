@@ -62,6 +62,9 @@ public class DialogueManager : MonoBehaviour
 
     public void SetNewDialogue(List<DialogueLine> newDialogueLines)
     {
+        if (newDialogueLines == null || newDialogueLines.Count == 0)
+            return;
+
         if (typewriterCoroutine != null)
         {
             StopCoroutine(typewriterCoroutine);
@@ -197,7 +200,7 @@ public class DialogueManager : MonoBehaviour
 
             int characterCount = DialogueText.textInfo.characterCount;
 
-            yield return new WaitForSeconds(0.5f);
+            yield return new WaitForSeconds(0.15f);
             for (int i = 0; i <= characterCount; i++)
             {
                 DialogueText.maxVisibleCharacters = i;
@@ -211,10 +214,13 @@ public class DialogueManager : MonoBehaviour
         isTyping = false;
         typewriterCoroutine = null;
 
-        DialogueLine line = dialogueLines[currentLineIndex];
-        if (line.autoplayDelay != 0f)
+        if (dialogueLines != null && currentLineIndex < dialogueLines.Count)
         {
-            autoAdvanceCoroutine = StartCoroutine(AutoAdvanceAfterDelay(line.autoplayDelay));
+            DialogueLine line = dialogueLines[currentLineIndex];
+            if (line.autoplayDelay > 0f)
+            {
+                autoAdvanceCoroutine = StartCoroutine(AutoAdvanceAfterDelay(line.autoplayDelay));
+            }
         }
     }
 

@@ -12,6 +12,9 @@ namespace Template
             if (GameManager.Instance != null && GameManager.Instance.m_DialogueManager != null && GameManager.Instance.m_DialogueManager.WasDialogueActiveRecently)
                 return;
 
+            if (GameManager.Instance != null && GameManager.Instance.IsActionInProgress)
+                return;
+
             GameManager.Instance.ConfirmPlayerDecision();
         }
     }
