@@ -298,6 +298,7 @@ namespace Template.Content.Scripts.Managers
             m_IsActionInProgress = false;
 
             decideState.ConfirmDecision(chosenColour, playedCardsCopy);
+            SpawnPlayerHandItems();
             FinishPlay();
         }
 
@@ -410,6 +411,9 @@ namespace Template.Content.Scripts.Managers
         private void BeginRound()
         {
             m_IsActionInProgress = false;
+            if (m_WinLossText != null)
+                m_WinLossText.gameObject.SetActive(false);
+
             // Instantiates the round blackboard and FSM
             m_Blackboard = new GameBlackboard(m_AIProfile);
             m_SelectedColour = m_Blackboard.TargetColour;
