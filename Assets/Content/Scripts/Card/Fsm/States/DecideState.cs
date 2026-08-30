@@ -3,6 +3,7 @@
 using System.Collections.Generic;
 using Template.Content.Scripts.Card.Blackboard;
 using Template.Content.Scripts.Card.Data;
+using Template.Content.Scripts.Managers;
 using UnityEngine;
 using static Template.Content.Scripts.Card.Fuzzy.AIFuzzyBrainUtil;
 

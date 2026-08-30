@@ -51,13 +51,29 @@ public class DialogueManager : MonoBehaviour
 
     private bool isTyping;
     private bool dialogueActive;
+    private int lastClosedFrame = -1;
+    private float lastClosedTime = -1f;
+    private int lastAdvanceFrame = -1;
 
     public bool IsDialogueActive => dialogueActive;
+    public bool WasDialogueActiveRecently => dialogueActive || Time.frameCount == lastClosedFrame || (Time.unscaledTime - lastClosedTime < 0.2f);
 
     private TMP_Text currentText;
 
     public void SetNewDialogue(List<DialogueLine> newDialogueLines)
     {
+        if (typewriterCoroutine != null)
+        {
+            StopCoroutine(typewriterCoroutine);
+            typewriterCoroutine = null;
+        }
+
+        if (autoAdvanceCoroutine != null)
+        {
+            StopCoroutine(autoAdvanceCoroutine);
+            autoAdvanceCoroutine = null;
+        }
+
         dialogueLines = newDialogueLines;
         currentLineIndex = 0;
 
@@ -88,12 +104,23 @@ public class DialogueManager : MonoBehaviour
         if (!dialogueActive)
             return;
 
+        // Guard against multiple triggers on the exact same frame (e.g. UI Button + InputHandler)
+        if (Time.frameCount == lastAdvanceFrame)
+            return;
+        lastAdvanceFrame = Time.frameCount;
+
         // If the text is currently typing,
         // clicking finishes the current line instead.
         if (isTyping)
         {
             FinishTyping();
             return;
+        }
+
+        if (autoAdvanceCoroutine != null)
+        {
+            StopCoroutine(autoAdvanceCoroutine);
+            autoAdvanceCoroutine = null;
         }
 
         currentLineIndex++;
@@ -135,11 +162,20 @@ public class DialogueManager : MonoBehaviour
         }
     }
 
+    private Coroutine autoAdvanceCoroutine;
+
     private void StartTyping(string text)
     {
         if (typewriterCoroutine != null)
         {
             StopCoroutine(typewriterCoroutine);
+            typewriterCoroutine = null;
+        }
+
+        if (autoAdvanceCoroutine != null)
+        {
+            StopCoroutine(autoAdvanceCoroutine);
+            autoAdvanceCoroutine = null;
         }
 
         typewriterCoroutine = StartCoroutine(TypeText(text));
@@ -172,14 +208,14 @@ public class DialogueManager : MonoBehaviour
             }
         }
 
+        isTyping = false;
+        typewriterCoroutine = null;
+
         DialogueLine line = dialogueLines[currentLineIndex];
         if (line.autoplayDelay != 0f)
         {
-            StartCoroutine(AutoAdvanceAfterDelay(line.autoplayDelay));
+            autoAdvanceCoroutine = StartCoroutine(AutoAdvanceAfterDelay(line.autoplayDelay));
         }
-
-        isTyping = false;
-        typewriterCoroutine = null;
     }
 
     private void FinishTyping()
@@ -206,6 +242,7 @@ public class DialogueManager : MonoBehaviour
     {
         yield return new WaitForSeconds(delay);
         Debug.Log($"Auto-advancing after {delay} seconds.");
+        autoAdvanceCoroutine = null;
         NextLine();
     }
 
@@ -219,11 +256,19 @@ public class DialogueManager : MonoBehaviour
     {
         dialogueActive = false;
         isTyping = false;
+        lastClosedFrame = Time.frameCount;
+        lastClosedTime = Time.unscaledTime;
 
         if (typewriterCoroutine != null)
         {
             StopCoroutine(typewriterCoroutine);
             typewriterCoroutine = null;
+        }
+
+        if (autoAdvanceCoroutine != null)
+        {
+            StopCoroutine(autoAdvanceCoroutine);
+            autoAdvanceCoroutine = null;
         }
 
         HideAllPanels();

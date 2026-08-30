@@ -20,9 +20,6 @@ namespace Template.Content.Scripts.Managers
     /// </summary>
     public sealed class GameManager : Singleton<GameManager>
     {
-        [Tooltip("Required. Fuzzy profile for the god you face this round.")] [SerializeField]
-        public AIFuzzyProfile m_AIProfile;
-
         /// <summary>Public accessors for important Blackboard vars.</summary>
         public List<CardID> PlayerHand => m_Blackboard.PlayerHand;
 
@@ -42,12 +39,14 @@ namespace Template.Content.Scripts.Managers
         private GameBlackboard m_Blackboard;
         private FSM m_Fsm;
 
-        public DialogueManager m_DialogueManager;
-
+        [Header("Managers")] [SerializeField] public DialogueManager m_DialogueManager;
         public ArmManager m_PlayerArmManager;
         public ArmManager m_OpponentArmManager;
 
-        [SerializeField] private List<DialogueLine> m_IntroDialogue;
+        [Header("AI Profile")] [Tooltip("Required. Fuzzy profile for the god you face this round.")] [SerializeField]
+        public AIFuzzyProfile m_AIProfile;
+
+        [Header("Dialogue")] [SerializeField] private List<DialogueLine> m_IntroDialogue;
         [SerializeField] private List<DialogueLine> m_PlayerAddedItemDialogue;
         [SerializeField] private List<DialogueLine> m_AIAddedItemDialogue;
         [SerializeField] private List<DialogueLine> m_CallOutWrongDialogue;
@@ -56,6 +55,9 @@ namespace Template.Content.Scripts.Managers
         [SerializeField] private List<DialogueLine> m_GetCalledOutCorrectDialogue;
         [SerializeField] private List<DialogueLine> m_WinDialogue;
         [SerializeField] private List<DialogueLine> m_LoseDialogue;
+
+        [Header("Win / Loss UI")] [SerializeField]
+        private TMP_Text m_WinLossText;
 
         [Header("Item Spawning")] [SerializeField]
         private GameObject m_ItemPrefab;
@@ -74,6 +76,7 @@ namespace Template.Content.Scripts.Managers
         private float m_RowYOffset = 1.2f;
 
         private readonly List<Item> m_SpawnedHandItems = new List<Item>();
+        private readonly List<Item> m_SelectedItems = new List<Item>();
         private readonly List<CardID> m_SelectedCards = new List<CardID>();
         private CardColour m_SelectedColour;
 
@@ -120,8 +123,8 @@ namespace Template.Content.Scripts.Managers
                 if (itemComp != null)
                 {
                     itemComp.Initialize(card.Colour, card.Suit);
-                    // Tiered sorting to make the hand look nice
-                    itemComp.SetSortingOrder(i * 2 + 1);
+                    var order = (i + 1) * 2 + 1;
+                    itemComp.SetHandOrigin(parent, itemObj.transform.localPosition, order);
                     m_SpawnedHandItems.Add(itemComp);
                 }
             }
@@ -138,6 +141,9 @@ namespace Template.Content.Scripts.Managers
 
         private void ClearPlayerHandItems()
         {
+            m_SelectedItems.Clear();
+            m_SelectedCards.Clear();
+
             foreach (var t in m_SpawnedHandItems)
             {
                 if (t != null)
@@ -153,21 +159,64 @@ namespace Template.Content.Scripts.Managers
         /// <param name="playedCards"></param>
         private void RemovePlayedItems(List<CardID> playedCards)
         {
-            for (var i = m_SpawnedHandItems.Count - 1; i >= 0; i--)
+            foreach (var item in m_SelectedItems)
             {
-                var item = m_SpawnedHandItems[i];
-                if (item == null) continue;
-
-                foreach (var t in playedCards)
+                if (item != null)
                 {
-                    if (item.cardColour == t.Colour && item.cardSuit == t.Suit)
-                    {
-                        m_SpawnedHandItems.RemoveAt(i);
-                        Destroy(item.gameObject);
-                        break;
-                    }
+                    m_SpawnedHandItems.Remove(item);
+                    Destroy(item.gameObject);
                 }
             }
+
+            m_SelectedItems.Clear();
+            m_SelectedCards.Clear();
+
+            SpawnPlayerHandItems();
+        }
+
+        public void OnCardSelected(Item item)
+        {
+            if (item == null) return;
+            if (!m_SelectedItems.Contains(item))
+            {
+                m_SelectedItems.Add(item);
+                m_SelectedCards.Add(new CardID(item.cardSuit, item.cardColour));
+            }
+
+            UpdateHeldItemsLayout();
+        }
+
+        public void OnCardDeselected(Item item)
+        {
+            if (item == null) return;
+            if (m_SelectedItems.Contains(item))
+            {
+                m_SelectedItems.Remove(item);
+                m_SelectedCards.Remove(new CardID(item.cardSuit, item.cardColour));
+                item.Deselect();
+            }
+
+            UpdateHeldItemsLayout();
+        }
+
+        private void UpdateHeldItemsLayout()
+        {
+            var count = m_SelectedItems.Count;
+            var spacing = m_ItemSpacing * 0.6f;
+            for (var i = 0; i < count; i++)
+                m_SelectedItems[i].ApplySelectedVisuals(true, i, count, m_HeldItemContainer, spacing);
+        }
+
+        public void DeselectAllCards()
+        {
+            m_SelectedCards.Clear();
+            foreach (var item in m_SelectedItems)
+            {
+                if (item != null)
+                    item.Deselect();
+            }
+
+            m_SelectedItems.Clear();
         }
 
         public void OnCardAdded(CardColour colour, CardSuit suit)
@@ -187,7 +236,8 @@ namespace Template.Content.Scripts.Managers
                 playState.CompletePlay();
                 Debug.Log($"[GameManager] Player finished their play with {m_SelectedCards.Count} cards.");
 
-                if (m_DialogueManager != null && m_PlayerAddedItemDialogue != null && m_PlayerAddedItemDialogue.Count > 0)
+                if (m_DialogueManager != null && m_PlayerAddedItemDialogue != null &&
+                    m_PlayerAddedItemDialogue.Count > 0)
                     m_DialogueManager.SetNewDialogue(m_PlayerAddedItemDialogue);
 
                 if (m_PlayerArmManager != null)
@@ -197,7 +247,7 @@ namespace Template.Content.Scripts.Managers
 
         public void ConfirmPlayerDecision()
         {
-            if (m_DialogueManager != null && m_DialogueManager.IsDialogueActive)
+            if (m_DialogueManager != null && m_DialogueManager.WasDialogueActiveRecently)
                 return;
 
             if (m_SelectedCards.Count == 0)
@@ -212,7 +262,6 @@ namespace Template.Content.Scripts.Managers
                 var playedCardsCopy = new List<CardID>(m_SelectedCards);
                 decideState.ConfirmDecision(m_SelectedColour, m_SelectedCards);
                 RemovePlayedItems(playedCardsCopy);
-                m_SelectedCards.Clear();
                 FinishPlay();
             }
         }
@@ -276,9 +325,6 @@ namespace Template.Content.Scripts.Managers
             if (m_DialogueManager != null)
                 m_DialogueManager.SetNewDialogue(m_AIAddedItemDialogue);
         }
-
-        [Header("Win / Loss UI")] [SerializeField]
-        private TMP_Text m_WinLossText;
 
         public void EndDialogue(bool playerWon)
         {

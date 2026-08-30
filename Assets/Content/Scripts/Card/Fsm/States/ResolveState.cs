@@ -98,23 +98,23 @@ namespace Template.Content.Scripts.Card.Fsm.States
                     m_Board.OpponentHand.AddRange(m_Board.Pile);
                 }
             }
-            else if (m_Board.ActiveTurn == TurnUser.Player) // Not a bluff
-            {
-                GameManager.Instance.ChallengeOpponentWrong();
-
-                Debug.Log($"[CardRound] Challenge FAILED! {m_Board.ActiveTurn} was telling the truth!");
-                // Player called bluff on opponent but opponent was honest, so player loses trust
-                m_Board.PlayerHand.AddRange(m_Board.Pile);
-                GameManager.Instance.SpawnPlayerHandItems();
-            }
-            else
+            else if (m_Board.ActiveTurn == TurnUser.Player)
             {
                 GameManager.Instance.AIDialogueChallengeWrong();
 
                 Debug.Log($"[CardRound] Challenge FAILED! {m_Board.ActiveTurn} was telling the truth!");
-                // Opponent called bluff on player but player was honest, so opponent trusts the player more
+                // Opponent called bluff on player but player was honest, so opponent takes the pile and gains trust in player
                 m_Board.ShiftTrust(true);
                 m_Board.OpponentHand.AddRange(m_Board.Pile);
+            }
+            else
+            {
+                GameManager.Instance.ChallengeOpponentWrong();
+
+                Debug.Log($"[CardRound] Challenge FAILED! {m_Board.ActiveTurn} was telling the truth!");
+                // Player called bluff on opponent but opponent was honest, so player takes the pile
+                m_Board.PlayerHand.AddRange(m_Board.Pile);
+                GameManager.Instance.SpawnPlayerHandItems();
             }
 
             // Clear the pile for the next turn as someone will always take it after a challenge has been initiated

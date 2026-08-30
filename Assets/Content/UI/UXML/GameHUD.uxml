@@ -1,7 +1,7 @@
 <ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" editor-extension-mode="False">
-    <ui:VisualElement name="HudRoot" style="position: absolute; left: 16px; top: 16px; padding: 12px; background-color: rgba(20, 20, 28, 0.85); border-radius: 8px; border-width: 1px; border-color: rgba(255, 255, 255, 0.2); -unity-font-definition: url(&quot;project://database/Assets/Content/Font/NicerNightie.ttf?fileID=12800000&amp;guid=3ba48a4296425d147b2f7d124c9a2994&amp;type=3#NicerNightie&quot;);">
-        <ui:Label name="StateLabel" text="State: DecideState | Active: Player" style="color: rgb(240, 240, 245); font-size: 20px; margin-bottom: 4px;" />
-        <ui:Label name="InfoLabel" text="Target: Red | Player: 4 | AI: 4" style="color: rgb(200, 200, 215); font-size: 18px; margin-bottom: 6px;" />
-        <ui:Label name="ControlsLabel" text="LMB: Play / Pass | RMB: Challenge" style="color: rgb(255, 215, 100); font-size: 18px;" />
+    <ui:VisualElement name="HudRoot" style="position: absolute; left: 16px; top: 16px; padding: 12px; background-color: rgba(20, 20, 28, 0.85); border-radius: 8px; border-width: 1px; border-color: rgba(255, 255, 255, 0.2);">
+        <ui:Label name="StateLabel" text="State: DecideState | Active: Player" style="color: rgb(240, 240, 245); font-size: 14px; margin-bottom: 4px;" />
+        <ui:Label name="InfoLabel" text="Target: Red | Player: 4 | AI: 4" style="color: rgb(200, 200, 215); font-size: 13px; margin-bottom: 6px;" />
+        <ui:Label name="ControlsLabel" text="LMB: Play / Pass | RMB: Deselect / Challenge" style="color: rgb(255, 215, 100); font-size: 13px;" />
     </ui:VisualElement>
 </ui:UXML>

@@ -41,6 +41,19 @@ namespace Template.Content.Scripts.Input
             m_Actions.Dispose();
         }
 
+        private void Update()
+        {
+            if (Keyboard.current != null && Keyboard.current.cKey.wasPressedThisFrame)
+            {
+                var gm = GameManager.Instance;
+                if (gm != null && gm.m_PlayerArmManager != null)
+                {
+                    Debug.Log("[InputHandler] Debug 'C' pressed: Triggering Reveal on Player Arm");
+                    gm.m_PlayerArmManager.RevealItem();
+                }
+            }
+        }
+
         private void OnCancelPerformed(InputAction.CallbackContext context)
         {
             if (m_PauseMenu != null)
@@ -71,12 +84,19 @@ namespace Template.Content.Scripts.Input
             var gm = GameManager.Instance;
             if (gm == null) return;
 
-            if (gm.m_DialogueManager != null && gm.m_DialogueManager.IsDialogueActive)
-                return;
-
+            // Allow right-click challenge even if dialogue is displaying the opponent's dialogue
             if (gm.CurrentState is ReactState && gm.ActiveTurn == TurnUser.Opponent)
             {
                 gm.ChallengeOpponent();
+                return;
+            }
+
+            if (gm.m_DialogueManager != null && gm.m_DialogueManager.IsDialogueActive)
+                return;
+
+            if (gm.CurrentState is DecideState && gm.ActiveTurn == TurnUser.Player)
+            {
+                gm.DeselectAllCards();
             }
         }
     }

@@ -12,9 +12,11 @@ namespace Template
 
         private void OnMouseDown()
         {
+            if (GameManager.Instance != null && GameManager.Instance.m_DialogueManager != null && GameManager.Instance.m_DialogueManager.WasDialogueActiveRecently)
+                return;
+
             GameManager.Instance.OnColourSelected(cardColour);
             Debug.Log($"Selected {cardColour} colour.");
-
         }
     }
 }

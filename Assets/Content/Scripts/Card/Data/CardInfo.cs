@@ -37,7 +37,7 @@ namespace Template.Content.Scripts.Card.Data
         public bool IsColourWithinThreshold(CardColour target)
         {
             CardHelpers.GetNeighbouringColours(out var lower, out var higher, target);
-            return Colour == target || lower == target || higher == target;
+            return Colour == target || Colour == lower || Colour == higher;
         }
 
         /// <summary>

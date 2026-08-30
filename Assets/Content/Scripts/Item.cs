@@ -23,22 +23,81 @@ namespace Template
         [SerializeField] private Sprite fleshSprite;
 
         private bool isSelected = false;
+        private Transform m_HandParent;
+        private Vector3 m_HandLocalPosition;
+        private int m_HandSortingOrder;
+
+        public void SetHandOrigin(Transform handParent, Vector3 localPos, int sortingOrder)
+        {
+            m_HandParent = handParent;
+            m_HandLocalPosition = localPos;
+            m_HandSortingOrder = sortingOrder;
+            SetSortingOrder(sortingOrder);
+        }
+
+        public void ApplySelectedVisuals(bool selected, int selectedIndex = 0, int totalSelected = 1, Transform heldContainer = null, float spacing = 1.5f)
+        {
+            isSelected = selected;
+            if (selected)
+            {
+                if (heldContainer != null)
+                {
+                    transform.SetParent(heldContainer);
+                    var startX = -((totalSelected - 1) * spacing) / 2f;
+                    transform.localPosition = new Vector3(startX + (selectedIndex * spacing), 0f, 0f);
+                }
+
+                SetGreyscaleVisuals(true);
+                SetSortingOrder(100 + (selectedIndex * 2) + 1);
+            }
+            else
+            {
+                if (m_HandParent != null)
+                    transform.SetParent(m_HandParent);
+                transform.localPosition = m_HandLocalPosition;
+                SetGreyscaleVisuals(false);
+                SetSortingOrder(m_HandSortingOrder);
+            }
+        }
+
+        private void SetGreyscaleVisuals(bool greyed)
+        {
+            if (spriteRenderer == null)
+                spriteRenderer = GetComponent<SpriteRenderer>();
+
+            var tint = greyed ? new Color(0.55f, 0.55f, 0.55f, 1f) : Color.white;
+            if (spriteRenderer != null)
+                spriteRenderer.color = tint;
+            if (backSpriteRenderer != null)
+                backSpriteRenderer.color = tint;
+        }
+
+        public void Deselect()
+        {
+            isSelected = false;
+            ApplySelectedVisuals(false);
+        }
 
         private void OnMouseDown()
         {
+            if (GameManager.Instance != null && GameManager.Instance.m_DialogueManager != null && GameManager.Instance.m_DialogueManager.WasDialogueActiveRecently)
+                return;
+
+            if (GameManager.Instance == null || GameManager.Instance.CurrentState is not Template.Content.Scripts.Card.Fsm.States.DecideState || GameManager.Instance.ActiveTurn != TurnUser.Player)
+                return;
+
             Debug.Log($"Clicked on {cardColour} {cardSuit} card.");
 
             if (!isSelected)
             {
-                GameManager.Instance.OnCardAdded(cardColour, cardSuit);
                 isSelected = true;
+                GameManager.Instance.OnCardSelected(this);
             }
             else
             {
-                GameManager.Instance.OnCardRemoved(cardColour, cardSuit);
                 isSelected = false;
+                GameManager.Instance.OnCardDeselected(this);
             }
-
         }
 
         public void Initialize(CardColour colour, CardSuit suit)

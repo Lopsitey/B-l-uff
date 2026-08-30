@@ -1,10 +1,14 @@
+#region
+
 using Template.Content.Scripts.Card.Data;
 using Template.Content.Scripts.Card.Fsm.States;
 using Template.Content.Scripts.Managers;
-using Template.UI.Views;
+using Template.Content.Scripts.UI.Views;
 using UnityEngine;
 
-namespace Template.UI.Controllers
+#endregion
+
+namespace Template.Content.Scripts.UI.Controllers
 {
     [RequireComponent(typeof(GameHUDView))]
     public sealed class GameHUDController : MonoBehaviour
@@ -38,8 +42,8 @@ namespace Template.UI.Controllers
             else if (gm.CurrentState is DecideState && gm.ActiveTurn == TurnUser.Player)
             {
                 controlsText = gm.SelectedCardsCount > 0
-                    ? $"LMB Cauldron: Play {gm.SelectedCardsCount} Card(s)"
-                    : "LMB Card: Select | LMB Cauldron: Play";
+                    ? $"LMB Cauldron: Play ({gm.SelectedCardsCount}) | RMB: Deselect"
+                    : "LMB Card: Select | RMB: Deselect";
             }
 
             m_View.UpdateHUD(stateText, infoText, controlsText);

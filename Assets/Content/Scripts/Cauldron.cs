@@ -9,8 +9,10 @@ namespace Template
 
         private void OnMouseDown()
         {
-            GameManager.Instance.ConfirmPlayerDecision();
+            if (GameManager.Instance != null && GameManager.Instance.m_DialogueManager != null && GameManager.Instance.m_DialogueManager.WasDialogueActiveRecently)
+                return;
 
+            GameManager.Instance.ConfirmPlayerDecision();
         }
     }
 }

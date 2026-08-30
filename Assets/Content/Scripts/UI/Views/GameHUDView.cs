@@ -1,7 +1,11 @@
+#region
+
 using UnityEngine;
 using UnityEngine.UIElements;
 
-namespace Template.UI.Views
+#endregion
+
+namespace Template.Content.Scripts.UI.Views
 {
     [RequireComponent(typeof(UIDocument))]
     public sealed class GameHUDView : MonoBehaviour
