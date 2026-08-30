@@ -40,8 +40,7 @@ namespace Template.Content.Scripts
             SetSortingOrder(sortingOrder);
         }
 
-        public void ApplySelectedVisuals(bool selected, int selectedIndex = 0, int totalSelected = 1,
-            Transform heldContainer = null, float spacing = 1.5f)
+        public void ApplySelectedVisuals(bool selected, int selectedIndex = 0, int totalSelected = 1, Transform heldContainer = null) 
         {
             isSelected = selected;
             if (selected)
@@ -49,11 +48,20 @@ namespace Template.Content.Scripts
                 if (heldContainer != null)
                 {
                     transform.SetParent(heldContainer);
-                    var startX = -((totalSelected - 1) * spacing) / 2f;
-                    transform.localPosition = new Vector3(startX + (selectedIndex * spacing), 0f, 0f);
+
+                    // Divide the circle equally between all items
+                    float angle = (360f / totalSelected) * selectedIndex;
+
+                    // Convert the angle into a position around the circle
+                    float angleRadians = angle * Mathf.Deg2Rad;
+
+                    float x = Mathf.Cos(angleRadians) * 0.5f * totalSelected;
+                    float y = Mathf.Sin(angleRadians) * 0.5f * totalSelected;
+
+                    transform.localPosition = new Vector3(x, y, 0f);
+
                 }
 
-                SetGreyscaleVisuals(true);
                 SetSortingOrder(100 + (selectedIndex * 2) + 1);
             }
             else
@@ -61,23 +69,12 @@ namespace Template.Content.Scripts
                 if (m_HandParent != null)
                     transform.SetParent(m_HandParent);
                 transform.localPosition = m_HandLocalPosition;
-                SetGreyscaleVisuals(false);
+
                 SetSortingOrder(m_HandSortingOrder);
             }
         }
 
-        private void SetGreyscaleVisuals(bool greyed)
-        {
-            if (spriteRenderer == null)
-                spriteRenderer = GetComponent<SpriteRenderer>();
 
-            var tint = greyed ? new Color(0.55f, 0.55f, 0.55f, 1f) : Color.white;
-            if (spriteRenderer != null)
-                spriteRenderer.color = tint;
-
-            if (backSpriteRenderer != null && backSpriteRenderer.sprite != null)
-                backSpriteRenderer.color = tint;
-        }
 
         public void Deselect()
         {
@@ -99,7 +96,7 @@ namespace Template.Content.Scripts
 
             Debug.Log($"Clicked on {cardColour} {cardSuit} card.");
 
-            if (!isSelected)
+            if (!isSelected && GameManager.Instance.SelectedCardsCount < 4)
             {
                 isSelected = true;
                 GameManager.Instance.OnCardSelected(this);
@@ -118,7 +115,7 @@ namespace Template.Content.Scripts
             ApplyVisuals();
         }
 
-        public void SetSortingOrder(int order)
+        public void SetSortingOrder(int order) //is this necessary too?
         {
             if (spriteRenderer == null)
                 spriteRenderer = GetComponent<SpriteRenderer>();
@@ -151,25 +148,25 @@ namespace Template.Content.Scripts
             switch (cardColour)
             {
                 case CardColour.Red:
-                    spriteRenderer.material.color = Color.red;
+                    spriteRenderer.material.color = new Color(172f / 255f, 50f / 255f, 50f / 255f);
                     break;
                 case CardColour.Orange:
-                    spriteRenderer.material.color = new Color(1f, 0.5f, 0f); // Orange
+                    spriteRenderer.material.color = new Color(223 / 255f, 113 / 255f, 38 / 255f); 
                     break;
                 case CardColour.Yellow:
-                    spriteRenderer.material.color = Color.yellow;
+                    spriteRenderer.material.color = new Color(251 / 255f, 242 / 255f, 54 / 255f); 
                     break;
                 case CardColour.Green:
-                    spriteRenderer.material.color = Color.green;
+                    spriteRenderer.material.color = new Color(153 / 255f, 229 / 255f, 80 / 255f); 
                     break;
                 case CardColour.Blue:
-                    spriteRenderer.material.color = Color.blue;
+                    spriteRenderer.material.color = new Color(91 / 255f, 110 / 255f, 225 / 255f); 
                     break;
                 case CardColour.Purple:
-                    spriteRenderer.material.color = new Color(0.5f, 0f, 0.5f); // Purple
+                    spriteRenderer.material.color = new Color(118 / 255f, 66 / 255f, 138 / 255f); 
                     break;
                 case CardColour.Pink:
-                    spriteRenderer.material.color = new Color(1f, 0.75f, 0.8f); // Pink
+                    spriteRenderer.material.color = new Color(215 / 255f, 123 / 255f, 186 / 255f); 
                     break;
             }
 
@@ -216,7 +213,7 @@ namespace Template.Content.Scripts
             UpdatePhysicsCollider();
         }
 
-        private void UpdatePhysicsCollider()
+        private void UpdatePhysicsCollider() //wtf is any of this doing
         {
             var polyCol = GetComponent<PolygonCollider2D>();
             if (polyCol == null)

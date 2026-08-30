@@ -61,7 +61,6 @@ namespace Template.Content.Scripts.Managers
         [SerializeField] private List<DialogueLine> m_GetCalledOutCorrectDialogue;
         [SerializeField] private List<DialogueLine> m_WinDialogue;
         [SerializeField] private List<DialogueLine> m_LoseDialogue;
-
         [SerializeField] public List<DialogueLine> m_DecidingDialogue;
 
         [Header("Win / Loss UI")] [SerializeField]
@@ -69,6 +68,8 @@ namespace Template.Content.Scripts.Managers
 
         [Header("Item Spawning")] [SerializeField]
         private GameObject m_ItemPrefab;
+
+        [SerializeField] private SpriteRenderer waterSpriteRenderer;
 
         [SerializeField] private Transform m_HandContainer;
 
@@ -187,9 +188,9 @@ namespace Template.Content.Scripts.Managers
             if (item == null || m_IsActionInProgress) return;
             if (!m_SelectedItems.Contains(item))
             {
-                m_SelectedItems.Add(item);
-                m_SelectedCards.Add(new CardID(item.cardSuit, item.cardColour));
-                m_SelectedColour = item.cardColour;
+                m_SelectedItems.Add(item); //why do we need both selecteditems and selected cards?
+                m_SelectedCards.Add(new CardID(item.cardSuit, item.cardColour));   
+                //m_SelectedColour = item.cardColour;                         //shouldnt change the colour based on the item?????
             }
 
             UpdateHeldItemsLayout();
@@ -218,7 +219,7 @@ namespace Template.Content.Scripts.Managers
             var count = m_SelectedItems.Count;
             var spacing = m_ItemSpacing * 0.6f;
             for (var i = 0; i < count; i++)
-                m_SelectedItems[i].ApplySelectedVisuals(true, i, count, m_HeldItemContainer, spacing);
+                m_SelectedItems[i].ApplySelectedVisuals(true, i, count, m_HeldItemContainer);
         }
 
         public void DeselectAllCards()
@@ -243,7 +244,57 @@ namespace Template.Content.Scripts.Managers
             => m_SelectedCards.Remove(new CardID(suit, colour));
 
         public void OnColourSelected(CardColour colour)
-            => m_SelectedColour = colour;
+        {
+            m_SelectedColour = colour;
+
+            switch (m_SelectedColour)
+            {
+                case CardColour.Red:
+                    StartCoroutine(LerpColour(new Color(172 / 255f, 50 / 255f, 50 / 255f)));
+                    break;
+                case CardColour.Orange:
+                    StartCoroutine(LerpColour(new Color(223 / 255f, 113 / 255f, 38 / 255f)));
+                    break;
+                case CardColour.Yellow:
+                    StartCoroutine(LerpColour(new Color(251 / 255f, 242 / 255f, 54 / 255f)));
+                    break;
+                case CardColour.Green:
+                    StartCoroutine(LerpColour(new Color(153 / 255f, 229 / 255f, 80 / 255f)));
+                    break;
+                case CardColour.Blue:
+                    StartCoroutine(LerpColour(new Color(91 / 255f, 110 / 255f, 225 / 255f)));
+                    break;
+                case CardColour.Purple:
+                    StartCoroutine(LerpColour(new Color(118 / 255f, 66 / 255f, 138 / 255f)));
+                    break;
+                case CardColour.Pink:
+                    StartCoroutine(LerpColour(new Color(215 / 255f, 123 / 255f, 186 / 255f)));
+                    break;
+            }
+
+        }
+
+        private IEnumerator LerpColour(Color targetColour)
+        {
+            float elapsed = 0f;
+            float duration = 1f;
+
+            Color startColour = waterSpriteRenderer.color;
+
+            while (elapsed < duration)
+            {
+                elapsed += Time.deltaTime;
+
+                float t = elapsed / duration;
+
+                waterSpriteRenderer.color = Color.Lerp(startColour, targetColour, t);
+
+                yield return null;
+            }
+
+            // Make sure we end exactly on the target colour
+            waterSpriteRenderer.color = targetColour;
+        }
 
         // Called when the player has finished playing the cards
         public void FinishPlay()
@@ -284,9 +335,8 @@ namespace Template.Content.Scripts.Managers
             if (m_PlayerArmManager != null)
                 m_PlayerArmManager.RaiseArm();
 
-            if (m_DialogueManager != null && m_PlayerAddedItemDialogue != null &&
-                m_PlayerAddedItemDialogue.Count > 0)
-                m_DialogueManager.SetNewDialogue(m_PlayerAddedItemDialogue);
+            if (m_DialogueManager != null && m_PlayerAddedItemDialogue != null && m_PlayerAddedItemDialogue.Count > 0)
+                m_DialogueManager.SetNewDialogue(m_PlayerAddedItemDialogue, m_SelectedCards.Count, m_SelectedColour);
 
             yield return new WaitForSeconds(0.1f);
 
@@ -298,6 +348,7 @@ namespace Template.Content.Scripts.Managers
             m_IsActionInProgress = false;
 
             decideState.ConfirmDecision(chosenColour, playedCardsCopy);
+
             SpawnPlayerHandItems();
             FinishPlay();
         }
@@ -369,12 +420,14 @@ namespace Template.Content.Scripts.Managers
                 m_DialogueManager.SetNewDialogue(m_GetCalledOutWrongDialogue);
         }
 
-        public void AIAddCards()
+        public void AIAddCards(int amount, CardColour colour)
         {
+            OnColourSelected(colour);
+
             if (m_OpponentArmManager != null)
                 m_OpponentArmManager.RaiseArm();
             if (m_DialogueManager != null)
-                m_DialogueManager.SetNewDialogue(m_AIAddedItemDialogue);
+                m_DialogueManager.SetNewDialogue(m_AIAddedItemDialogue, amount, colour);
         }
 
         public void EndDialogue(bool playerWon)
@@ -444,5 +497,6 @@ namespace Template.Content.Scripts.Managers
             enabled = false;
             return false;
         }
+
     }
 }

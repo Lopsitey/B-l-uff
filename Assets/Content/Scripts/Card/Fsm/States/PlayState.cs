@@ -50,7 +50,7 @@ namespace Template.Content.Scripts.Card.Fsm.States
                     $"[CardRound] Opponent played {m_ChosenCards.Count} card/s of claimed colour {m_Board.TargetColour}");
                 m_Fsm.SetState(new ReactState(m_Fsm, m_Board));
 
-                GameManager.Instance.AIAddCards();
+                GameManager.Instance.AIAddCards(m_ChosenCards.Count, m_Board.TargetColour);
             }
         }
 

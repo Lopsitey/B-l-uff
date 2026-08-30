@@ -150,6 +150,7 @@ namespace Template.Content.Scripts.Card.Fsm.States
         public void ConfirmDecision(CardColour claimedColour, List<CardID> chosenCards)
         {
             m_Board.TargetColour = claimedColour;
+
             // Clean transition into PlayState
             m_Fsm.SetState(new PlayState(m_Fsm, m_Board, chosenCards));
 

@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using Template.Content.Scripts.Card.Data;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -30,8 +31,6 @@ public class DialogueLine
 }
 
 
-
-
 public class DialogueManager : MonoBehaviour
 {
     [Header("Dialogue")]
@@ -59,6 +58,37 @@ public class DialogueManager : MonoBehaviour
     public bool WasDialogueActiveRecently => dialogueActive || Time.frameCount == lastClosedFrame || (Time.unscaledTime - lastClosedTime < 0.2f);
 
     private TMP_Text currentText;
+
+    public void SetNewDialogue(List<DialogueLine> newDialogueLines, int amount, CardColour colour)
+    {
+        if (newDialogueLines == null || newDialogueLines.Count == 0)
+            return;
+
+        if (typewriterCoroutine != null)
+        {
+            StopCoroutine(typewriterCoroutine);
+            typewriterCoroutine = null;
+        }
+
+        if (autoAdvanceCoroutine != null)
+        {
+            StopCoroutine(autoAdvanceCoroutine);
+            autoAdvanceCoroutine = null;
+        }
+
+        dialogueLines = newDialogueLines;
+
+        foreach (var line in dialogueLines)
+        {
+            line.text = line.text
+                .Replace("AMOUNT", amount.ToString())
+                .Replace("COLOUR", colour.ToString());
+        }
+
+        currentLineIndex = 0;
+
+        StartDialogue();
+    }
 
     public void SetNewDialogue(List<DialogueLine> newDialogueLines)
     {
@@ -182,7 +212,6 @@ public class DialogueManager : MonoBehaviour
         }
 
         typewriterCoroutine = StartCoroutine(TypeText(text));
-        Debug.Log($"Started typing: {text}");
     }
 
     private IEnumerator TypeText(string text)
@@ -247,7 +276,6 @@ public class DialogueManager : MonoBehaviour
     private IEnumerator AutoAdvanceAfterDelay(float delay)
     {
         yield return new WaitForSeconds(delay);
-        Debug.Log($"Auto-advancing after {delay} seconds.");
         autoAdvanceCoroutine = null;
         NextLine();
     }
@@ -281,8 +309,6 @@ public class DialogueManager : MonoBehaviour
 
         if (DialogueBox != null)
             DialogueBox.SetActive(false);
-
-        Debug.Log("Dialogue finished.");
     }
 
     private void ToggleDialogueBox() 
