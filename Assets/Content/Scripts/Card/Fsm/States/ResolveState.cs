@@ -40,8 +40,6 @@ namespace Template.Content.Scripts.Card.Fsm.States
 
                 GameManager.Instance.EndDialogue(true);
 
-
-
                 //GameManager.Instance.DialogueManager.StartDialogue(GameManager.Instance.m_AIProfile.m_Character.loseDialogue);
                 //Debug.Log(GameManager.Instance.m_AIProfile.m_Character.loseDialogue);
 
@@ -91,6 +89,7 @@ namespace Template.Content.Scripts.Card.Fsm.States
                     m_Board.ShiftTrust(false);
                     // Player was bluffing so they take the pile into their hand
                     m_Board.PlayerHand.AddRange(m_Board.Pile);
+                    GameManager.Instance.SpawnPlayerHandItems();
                 }
                 else
                 {
@@ -106,6 +105,7 @@ namespace Template.Content.Scripts.Card.Fsm.States
                 Debug.Log($"[CardRound] Challenge FAILED! {m_Board.ActiveTurn} was telling the truth!");
                 // Player called bluff on opponent but opponent was honest, so player loses trust
                 m_Board.PlayerHand.AddRange(m_Board.Pile);
+                GameManager.Instance.SpawnPlayerHandItems();
             }
             else
             {

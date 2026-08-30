@@ -24,49 +24,97 @@ namespace Template.Content.Scripts.Card.Fsm.States
         public void Enter()
         {
             if (m_Board.ActiveTurn == TurnUser.Player)
-            {
                 Debug.Log($"[CardRound] Decide.Enter seat={m_Board.ActiveTurn} player vs {m_Board.GetOpponentLabel()}");
-            }
             else
             {
+                var hand = m_Board.OpponentHand;
                 Debug.Log(
-                    $"[CardRound] Decide.Enter seat={m_Board.ActiveTurn} opponent vs {m_Board.GetOpponentLabel()}");
+                    $"[CardRound] Decide.Enter seat={m_Board.ActiveTurn} opponent vs {m_Board.GetOpponentLabel()} (Hand count: {hand.Count})");
+
+                if (hand.Count == 0)
+                    return;
+
                 const float fuzzyThreshold = 0.85f;
                 const float comboThreshold = 0.5f;
-                Debug.Log($"[CardRound] Decide.Enter seat={m_Board.ActiveTurn}");
 
-                if (EvaluateBluffRisk(m_Board) > fuzzyThreshold)
+                var bluffRisk = EvaluateBluffRisk(m_Board);
+                var isBluffing = bluffRisk > fuzzyThreshold;
+                Debug.Log($"[CardRound] AI Bluff Evaluation: risk={bluffRisk:0.00}, threshold={fuzzyThreshold:0.00}, decidesBluff={isBluffing}");
+
+                // Gather cards that match legal claims (target, target - 1, target + 1)
+                var currentTarget = m_Board.TargetColour;
+                CardHelpers.GetNeighbouringColours(out var legalMinus1, out var legalPlus1, currentTarget);
+
+                var exactMatches = new List<CardID>();
+                var minus1Matches = new List<CardID>();
+                var plus1Matches = new List<CardID>();
+                var nonMatchingCards = new List<CardID>();
+
+                foreach (var card in hand)
                 {
-                    Debug.Log($"[CardRound] bluff risk = {EvaluateBluffRisk(m_Board):0.00}");
+                    if (card.Colour == currentTarget)
+                        exactMatches.Add(card);
+                    else if (card.Colour == legalMinus1)
+                        minus1Matches.Add(card);
+                    else if (card.Colour == legalPlus1)
+                        plus1Matches.Add(card);
+                    else
+                        nonMatchingCards.Add(card);
+                }
 
-                    var bluffCombo = EvaluateComboAppetite(m_Board, 0f, true);
-                    Debug.Log($"[CardRound] combo appetite honest={bluffCombo:0.00} bluff={bluffCombo:0.00}");
+                CardColour chosenClaim;
+                var cardsToPlay = new List<CardID>();
 
-                    if (bluffCombo > comboThreshold)
+                // Determine claim: prefer honest play if we have matching cards and aren't forcing a bluff
+                if (!isBluffing && (exactMatches.Count > 0 || minus1Matches.Count > 0 || plus1Matches.Count > 0))
+                {
+                    // Pick the legal claim where AI holds the most cards
+                    if (exactMatches.Count >= minus1Matches.Count && exactMatches.Count >= plus1Matches.Count)
                     {
-                        Debug.Log($"[CardRound] combo appetite = {bluffCombo:0.00}");
+                        chosenClaim = currentTarget;
+                        cardsToPlay.AddRange(exactMatches);
+                    }
+                    else if (minus1Matches.Count >= plus1Matches.Count)
+                    {
+                        chosenClaim = legalMinus1;
+                        cardsToPlay.AddRange(minus1Matches);
                     }
                     else
                     {
-                        // TODO: Implement AI bluff decision logic.
-                        ConfirmDecision(m_Board.OpponentHand[0].Colour, m_Board.OpponentHand.GetRange(0, 3));
+                        chosenClaim = legalPlus1;
+                        cardsToPlay.AddRange(plus1Matches);
                     }
+
+                    var availableCombo = cardsToPlay.Count / 3f;
+                    var honestComboAppetite = EvaluateComboAppetite(m_Board, availableCombo, false);
+                    Debug.Log($"[CardRound] AI Honest Play: claim={chosenClaim}, matchingCardsAvailable={cardsToPlay.Count}, comboAppetite={honestComboAppetite:0.00}");
+
+                    var maxCards = honestComboAppetite > comboThreshold ? Mathf.Min(cardsToPlay.Count, 3) : 1;
+                    cardsToPlay = cardsToPlay.GetRange(0, maxCards);
                 }
                 else
                 {
-                    var honestCombo = EvaluateComboAppetite(m_Board, 0f, false);
-                    Debug.Log($"[CardRound] combo appetite honest={honestCombo:0.00} bluff={honestCombo:0.00}");
+                    // Forced lie or strategic bluff: Pick target or adjacent claim and dump junk/non-matching cards
+                    chosenClaim = isBluffing ? legalPlus1 : currentTarget;
+                    var bluffComboAppetite = EvaluateComboAppetite(m_Board, 0f, true);
+                    var wantedCount = bluffComboAppetite > comboThreshold ? 2 : 1;
+                    wantedCount = Mathf.Min(wantedCount, hand.Count);
 
-                    if (honestCombo > comboThreshold)
+                    Debug.Log($"[CardRound] AI Bluff Play: claim={chosenClaim}, wantedCount={wantedCount}, bluffComboAppetite={bluffComboAppetite:0.00}");
+
+                    // Play junk cards first if available, otherwise any cards in hand
+                    if (nonMatchingCards.Count >= wantedCount)
                     {
-                        Debug.Log($"[CardRound] combo appetite = {honestCombo:0.00}");
+                        cardsToPlay = nonMatchingCards.GetRange(0, wantedCount);
                     }
                     else
                     {
-                        //TODO: Make AI pick more interesting cards to play than just the first 3 in their hand. For now, just pick the first 3 cards in their hand.
-                        ConfirmDecision(m_Board.OpponentHand[0].Colour, m_Board.OpponentHand.GetRange(0, 3));
+                        cardsToPlay = hand.GetRange(0, wantedCount);
                     }
                 }
+
+                Debug.Log($"[CardRound] AI confirms play: {cardsToPlay.Count} card(s) claimed as {chosenClaim} (Target was: {currentTarget})");
+                ConfirmDecision(chosenClaim, cardsToPlay);
             }
         }
 

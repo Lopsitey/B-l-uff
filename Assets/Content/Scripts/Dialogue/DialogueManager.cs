@@ -1,8 +1,8 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
-using System.Collections;
 using UnityEngine.UI;
 
 public enum DialogueMode
@@ -52,6 +52,8 @@ public class DialogueManager : MonoBehaviour
     private bool isTyping;
     private bool dialogueActive;
 
+    public bool IsDialogueActive => dialogueActive;
+
     private TMP_Text currentText;
 
     public void SetNewDialogue(List<DialogueLine> newDialogueLines)
@@ -64,12 +66,14 @@ public class DialogueManager : MonoBehaviour
 
     public void StartDialogue()
     {
-
-        ToggleDialogueBox();
+        if (DialogueBox != null)
+            DialogueBox.SetActive(true);
 
         if (dialogueLines == null || dialogueLines.Count == 0)
         {
             Debug.LogWarning("No dialogue lines have been assigned.");
+            if (DialogueBox != null)
+                DialogueBox.SetActive(false);
             return;
         }
 
@@ -224,7 +228,8 @@ public class DialogueManager : MonoBehaviour
 
         HideAllPanels();
 
-        ToggleDialogueBox();
+        if (DialogueBox != null)
+            DialogueBox.SetActive(false);
 
         Debug.Log("Dialogue finished.");
     }

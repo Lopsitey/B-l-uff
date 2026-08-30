@@ -1,3 +1,6 @@
+using Template.Content.Scripts.Card.Data;
+using Template.Content.Scripts.Card.Fsm.States;
+using Template.Content.Scripts.Managers;
 using Template.UI.Controllers;
 using UnityEngine;
 using UnityEngine.InputSystem;
@@ -18,23 +21,63 @@ namespace Template.Content.Scripts.Input
         private void OnEnable()
         {
             m_Actions.UI.Cancel.performed += OnCancelPerformed;
+            m_Actions.UI.Click.performed += OnClickPerformed;
+            m_Actions.UI.RightClick.performed += OnRightClickPerformed;
+
             m_Actions.Enable();
         }
 
         private void OnDisable()
         {
             m_Actions.UI.Cancel.performed -= OnCancelPerformed;
+            m_Actions.UI.Click.performed -= OnClickPerformed;
+            m_Actions.UI.RightClick.performed -= OnRightClickPerformed;
+
             m_Actions.Disable();
+        }
+
+        private void OnDestroy()
+        {
+            m_Actions.Dispose();
         }
 
         private void OnCancelPerformed(InputAction.CallbackContext context)
         {
-            if (m_PauseMenu == null)
+            if (m_PauseMenu != null)
             {
+                m_PauseMenu.TogglePause();
+            }
+        }
+
+        private void OnClickPerformed(InputAction.CallbackContext context)
+        {
+            var gm = GameManager.Instance;
+            if (gm == null) return;
+
+            if (gm.m_DialogueManager != null && gm.m_DialogueManager.IsDialogueActive)
+            {
+                gm.m_DialogueManager.NextLine();
                 return;
             }
 
-            m_PauseMenu.TogglePause();
+            if (gm.CurrentState is ReactState && gm.ActiveTurn == TurnUser.Opponent)
+            {
+                gm.Pass();
+            }
+        }
+
+        private void OnRightClickPerformed(InputAction.CallbackContext context)
+        {
+            var gm = GameManager.Instance;
+            if (gm == null) return;
+
+            if (gm.m_DialogueManager != null && gm.m_DialogueManager.IsDialogueActive)
+                return;
+
+            if (gm.CurrentState is ReactState && gm.ActiveTurn == TurnUser.Opponent)
+            {
+                gm.ChallengeOpponent();
+            }
         }
     }
 }

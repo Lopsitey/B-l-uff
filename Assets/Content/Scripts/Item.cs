@@ -1,4 +1,4 @@
-using Microsoft.CodeAnalysis;
+using System.Collections.Generic;
 using Template.Content.Scripts.Card.Data;
 using Template.Content.Scripts.Managers;
 using UnityEngine;
@@ -41,9 +41,42 @@ namespace Template
 
         }
 
-        void Start()
+        public void Initialize(CardColour colour, CardSuit suit)
+        {
+            cardColour = colour;
+            cardSuit = suit;
+            ApplyVisuals();
+        }
+
+        public void SetSortingOrder(int order)
+        {
+            if (spriteRenderer == null)
+                spriteRenderer = GetComponent<SpriteRenderer>();
+
+            if (spriteRenderer != null)
+                spriteRenderer.sortingOrder = order;
+
+            if (backSpriteRenderer != null && spriteRenderer != null)
+            {
+                backSpriteRenderer.sortingLayerID = spriteRenderer.sortingLayerID;
+                backSpriteRenderer.sortingOrder = order - 1;
+            }
+        }
+
+        private void Awake()
         {
             spriteRenderer = GetComponent<SpriteRenderer>();
+        }
+
+        private void Start()
+        {
+            ApplyVisuals();
+        }
+
+        public void ApplyVisuals()
+        {
+            if (spriteRenderer == null)
+                spriteRenderer = GetComponent<SpriteRenderer>();
 
             switch (cardColour)
             {
@@ -70,27 +103,35 @@ namespace Template
                     break;
             }
 
-
-            switch (cardSuit)
+            if (backSpriteRenderer != null)
             {
-                case CardSuit.Gems:
-                    spriteRenderer.sprite = gemSprite;
-                    backSpriteRenderer.color = new Color (0.5f, 0.5f, 0.5f, 0f); // invis
-                    break;
-                case CardSuit.Flesh:
-                    spriteRenderer.sprite = fleshSprite;
-                    backSpriteRenderer.sprite = boneSprite;
-                    break;
-                case CardSuit.Flora:
-                    spriteRenderer.sprite = flowerSprite;
-                    backSpriteRenderer.sprite = plantStemSprite;
-                    break;
-                case CardSuit.Vials:
-                    spriteRenderer.sprite = powderSprite;
-                    backSpriteRenderer.sprite = powderPaperSprite;
-                    break;
-            }
+                // Ensure back sprite is consistently rendered behind the front sprite
+                backSpriteRenderer.sortingLayerID = spriteRenderer.sortingLayerID;
+                backSpriteRenderer.sortingOrder = spriteRenderer.sortingOrder - 1;
 
+                switch (cardSuit)
+                {
+                    case CardSuit.Gems:
+                        spriteRenderer.sprite = gemSprite;
+                        backSpriteRenderer.color = new Color(0.5f, 0.5f, 0.5f, 0f); // invis
+                        break;
+                    case CardSuit.Flesh:
+                        spriteRenderer.sprite = fleshSprite;
+                        backSpriteRenderer.sprite = boneSprite;
+                        backSpriteRenderer.color = Color.white;
+                        break;
+                    case CardSuit.Flora:
+                        spriteRenderer.sprite = flowerSprite;
+                        backSpriteRenderer.sprite = plantStemSprite;
+                        backSpriteRenderer.color = Color.white;
+                        break;
+                    case CardSuit.Vials:
+                        spriteRenderer.sprite = powderSprite;
+                        backSpriteRenderer.sprite = powderPaperSprite;
+                        backSpriteRenderer.color = Color.white;
+                        break;
+                }
+            }
         }
 
     }

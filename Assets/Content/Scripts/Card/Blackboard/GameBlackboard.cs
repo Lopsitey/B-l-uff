@@ -73,7 +73,6 @@ namespace Template.Content.Scripts.Card.Blackboard
         public void SwapActiveTurn()
             => ActiveTurn = ActiveTurn == TurnUser.Player ? TurnUser.Opponent : TurnUser.Player;
 
-
         public void ShiftTrust(bool shiftUp)
         {
             // Increments the trust toward the player if the opponent was wrong, decrements if the opponent was right
@@ -83,6 +82,19 @@ namespace Template.Content.Scripts.Card.Blackboard
             else
                 TrustTowardPlayer -= AIProfile.DistrustPerLie;
             TrustTowardPlayer = Math.Clamp(TrustTowardPlayer, 0f, 1f);
+        }
+
+        /// <summary>
+        ///     Draws cards from the pot/pile into the specified hand.
+        /// </summary>
+        public void DrawExtraCards(TurnUser user, int count = 3)
+        {
+            var hand = user == TurnUser.Player ? PlayerHand : OpponentHand;
+            var amountToDraw = Math.Min(count, Pile.Count);
+            if (amountToDraw <= 0) return;
+
+            hand.AddRange(Pile.GetRange(0, amountToDraw));
+            Pile.RemoveRange(0, amountToDraw);
         }
 
         /// <summary>
