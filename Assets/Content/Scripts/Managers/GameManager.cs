@@ -62,6 +62,8 @@ namespace Template.Content.Scripts.Managers
         [SerializeField] private List<DialogueLine> m_WinDialogue;
         [SerializeField] private List<DialogueLine> m_LoseDialogue;
 
+        [SerializeField] public List<DialogueLine> m_DecidingDialogue;
+
         [Header("Win / Loss UI")] [SerializeField]
         private TMP_Text m_WinLossText;
 
@@ -271,6 +273,7 @@ namespace Template.Content.Scripts.Managers
             if (m_Fsm.CurrentState is DecideState decideState && m_Blackboard.ActiveTurn == TurnUser.Player)
             {
                 StartCoroutine(PlayerPlayRoutine(decideState));
+
             }
         }
 

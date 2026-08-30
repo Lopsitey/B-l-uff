@@ -27,7 +27,10 @@ namespace Template.Content.Scripts.Card.Fsm.States
         public void Enter()
         {
             if (m_Board.ActiveTurn == TurnUser.Player)
+            {
                 Debug.Log($"[CardRound] Decide.Enter seat={m_Board.ActiveTurn} player vs {m_Board.GetOpponentLabel()}");
+                GameManager.Instance.m_DialogueManager.SetNewDialogue(GameManager.Instance.m_DecidingDialogue);
+            }
             else
             {
                 if (GameManager.Instance != null)

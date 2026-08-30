@@ -1194,14 +1194,43 @@ MonoBehaviour:
   - character: {fileID: 11400000, guid: 872fa4e2181e96c438232e8ea095fc69, type: 2}
     text: What am I doing here?
     autoplayDelay: 2
+  - character: {fileID: 11400000, guid: c2110277ebf30364db303556a4229460, type: 2}
+    text: Beat Death at his game of potion brewing and you will see your daughter
+      again.
+    autoplayDelay: 2
+  - character: {fileID: 11400000, guid: c2110277ebf30364db303556a4229460, type: 2}
+    text: Add ingredients to the pot, selecting them and choosing a colour from the
+      pentagram.
+    autoplayDelay: 2
+  - character: {fileID: 11400000, guid: c2110277ebf30364db303556a4229460, type: 2}
+    text: Take it in turns, adding ingredients, but for the potion to work, their
+      colours must be the same.
+    autoplayDelay: 2
+  - character: {fileID: 11400000, guid: c2110277ebf30364db303556a4229460, type: 2}
+    text: As well as being next to or the same as the colour from the previous round.
+    autoplayDelay: 2
+  - character: {fileID: 11400000, guid: c2110277ebf30364db303556a4229460, type: 2}
+    text: Catch death lying and trick him yourself to reach the end and use all your
+      ingredients.
+    autoplayDelay: 2
+  - character: {fileID: 11400000, guid: c2110277ebf30364db303556a4229460, type: 2}
+    text: I have faith in you, lost soul.
+    autoplayDelay: 2
   m_PlayerAddedItemDialogue:
   - character: {fileID: 11400000, guid: 872fa4e2181e96c438232e8ea095fc69, type: 2}
     text: Eat this!
     autoplayDelay: 0
   m_AIAddedItemDialogue:
   - character: {fileID: 11400000, guid: 916d8ef55cedd704288bd958ba5ac51c, type: 2}
-    text: Feel my wrath!
-    autoplayDelay: 0
+    text: 'I have added some ingredients mortal. '
+    autoplayDelay: 2
+  - character: {fileID: 11400000, guid: 916d8ef55cedd704288bd958ba5ac51c, type: 2}
+    text: Was I telling the TRUTH or a LIE?
+    autoplayDelay: 1
+  - character: {fileID: 11400000, guid: c2110277ebf30364db303556a4229460, type: 2}
+    text: Press LMB if you think he told the truth and RMB if you think it was a
+      lie.
+    autoplayDelay: 2
   m_CallOutWrongDialogue:
   - character: {fileID: 11400000, guid: 916d8ef55cedd704288bd958ba5ac51c, type: 2}
     text: Haha, you fool!
@@ -1244,6 +1273,10 @@ MonoBehaviour:
   - character: {fileID: 11400000, guid: 872fa4e2181e96c438232e8ea095fc69, type: 2}
     text: I don't deserve this!
     autoplayDelay: 2
+  m_DecidingDialogue:
+  - character: {fileID: 11400000, guid: 872fa4e2181e96c438232e8ea095fc69, type: 2}
+    text: Hmmm what should i choose...
+    autoplayDelay: 4
   m_WinLossText: {fileID: 1901630484}
   m_ItemPrefab: {fileID: 8809188124523310579, guid: 81d513c505cd4b94eb755794956cb2de, type: 3}
   m_HandContainer: {fileID: 1570563433}
@@ -1756,9 +1789,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 97dfecf4416d0e54791f827e7dab38a7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  hand0: {fileID: -1050456406, guid: 7bc89aac1d9afac478c2508d7f58df3f, type: 3}
-  hand1: {fileID: 2035640250, guid: 7bc89aac1d9afac478c2508d7f58df3f, type: 3}
-  hand2: {fileID: -315312656, guid: 7bc89aac1d9afac478c2508d7f58df3f, type: 3}
 --- !u!212 &1090152041
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -1823,7 +1853,7 @@ Transform:
   m_GameObject: {fileID: 1090152038}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -9.7, y: 39.1, z: 0}
+  m_LocalPosition: {x: -106, y: 39.1, z: 0}
   m_LocalScale: {x: -1, y: -1, z: 0.28405}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -1837,7 +1867,7 @@ Animator:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1090152038}
-  m_Enabled: 1
+  m_Enabled: 0
   m_Avatar: {fileID: 0}
   m_Controller: {fileID: 9100000, guid: 602d604bd47b2f8458f8d8a620cdfb01, type: 2}
   m_CullingMode: 0
@@ -2145,9 +2175,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 97dfecf4416d0e54791f827e7dab38a7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  hand0: {fileID: -1050456406, guid: 7bc89aac1d9afac478c2508d7f58df3f, type: 3}
-  hand1: {fileID: 2035640250, guid: 7bc89aac1d9afac478c2508d7f58df3f, type: 3}
-  hand2: {fileID: -315312656, guid: 7bc89aac1d9afac478c2508d7f58df3f, type: 3}
 --- !u!212 &1185445240
 SpriteRenderer:
   m_ObjectHideFlags: 0

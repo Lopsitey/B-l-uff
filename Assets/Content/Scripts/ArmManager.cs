@@ -5,11 +5,7 @@ namespace Template
 {
     public class ArmManager : MonoBehaviour
     {
-        [SerializeField] private Sprite hand0;
-        [SerializeField] private Sprite hand1;
-        [SerializeField] private Sprite hand2;
 
-        private SpriteRenderer m_ArmSpriteRenderer;
         private Animator animator;
         private Coroutine m_JiggleCoroutine;
         private Vector3 m_OriginalPos;
@@ -18,24 +14,13 @@ namespace Template
         private void Awake()
         {
             animator = GetComponent<Animator>();
-            m_ArmSpriteRenderer = GetComponent<SpriteRenderer>();
+
         }
 
-        public void SetHandSprite(int index)
-        {
-            if (m_ArmSpriteRenderer == null)
-                m_ArmSpriteRenderer = GetComponent<SpriteRenderer>();
-
-            if (m_ArmSpriteRenderer != null)
-            {
-                if (index == 0 && hand0 != null) m_ArmSpriteRenderer.sprite = hand0;
-                else if (index == 1 && hand1 != null) m_ArmSpriteRenderer.sprite = hand1;
-                else if (index == 2 && hand2 != null) m_ArmSpriteRenderer.sprite = hand2;
-            }
-        }
 
         public void SetHeldItemSprite(Sprite sprite, Color color)
         {
+
         }
 
         public void RaiseArm()
