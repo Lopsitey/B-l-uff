@@ -9,6 +9,7 @@ using Template.Content.Scripts.Card.Fsm.States;
 using Template.Content.Scripts.Card.Fuzzy;
 using TMPro;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 #endregion
 
@@ -162,10 +163,6 @@ namespace Template.Content.Scripts.Managers
             m_SpawnedHandItems.Clear();
         }
 
-        /// <summary>
-        ///     Removes the played cards from the player's hand items and destroys their game objects.
-        /// </summary>
-        /// <param name="playedCards"></param>
         private void RemovePlayedItems(List<CardID> playedCards)
         {
             foreach (var item in m_SelectedItems)
@@ -181,14 +178,14 @@ namespace Template.Content.Scripts.Managers
             m_SelectedCards.Clear();
 
             SpawnPlayerHandItems();
-        }
+        } // not even used
 
         public void OnCardSelected(Item item)
         {
             if (item == null || m_IsActionInProgress) return;
             if (!m_SelectedItems.Contains(item))
             {
-                m_SelectedItems.Add(item); //why do we need both selecteditems and selected cards?
+                m_SelectedItems.Add(item);
                 m_SelectedCards.Add(new CardID(item.cardSuit, item.cardColour));   
                 //m_SelectedColour = item.cardColour;                         //shouldnt change the colour based on the item?????
             }
@@ -316,8 +313,6 @@ namespace Template.Content.Scripts.Managers
 
             if (m_SelectedCards.Count == 0)
             {
-                if (m_PlayerArmManager != null)
-                    m_PlayerArmManager.ErrorJiggle();
                 return;
             }
 
@@ -335,8 +330,10 @@ namespace Template.Content.Scripts.Managers
             if (m_PlayerArmManager != null)
                 m_PlayerArmManager.RaiseArm();
 
+            Debug.Log(m_PlayerAddedItemDialogue);
+
             if (m_DialogueManager != null && m_PlayerAddedItemDialogue != null && m_PlayerAddedItemDialogue.Count > 0)
-                m_DialogueManager.SetNewDialogue(m_PlayerAddedItemDialogue, m_SelectedCards.Count, m_SelectedColour);
+                m_DialogueManager.SetNewDialogue(m_PlayerAddedItemDialogue, m_SelectedCards.Count, m_SelectedColour);    //broken - just repeating the number and colour of round 1
 
             yield return new WaitForSeconds(0.1f);
 
@@ -373,22 +370,22 @@ namespace Template.Content.Scripts.Managers
             if (m_Fsm.CurrentState is ReactState reactState && m_Blackboard.ActiveTurn == TurnUser.Opponent)
             {
                 if (m_OpponentArmManager != null)
-                    m_OpponentArmManager.RevealItem();
+                    //m_OpponentArmManager.RevealItem();
                 reactState.Challenge();
             }
             // Can also call player challenge dialogue here
         }
 
-        public void Pass()
+        public void PlayerPass()
         {
             if (m_Fsm.CurrentState is ReactState reactState && m_Blackboard.ActiveTurn == TurnUser.Opponent)
             {
                 if (m_OpponentArmManager != null)
-                    m_OpponentArmManager.DropItem();
+                    //m_OpponentArmManager.DropItem();
+
                 reactState.Pass();
             }
         }
-
 
         public void ChallengeOpponentCorrect()
         {
@@ -403,9 +400,15 @@ namespace Template.Content.Scripts.Managers
         }
 
 
-        public void AIDialogueChallenge()
+        public void AIChallenge()
         {
             //not needed?
+        }
+
+        public void AIPass()
+        {
+
+
         }
 
         public void AIDialogueChallengeCorrect()
@@ -418,16 +421,18 @@ namespace Template.Content.Scripts.Managers
         {
             if (m_DialogueManager != null)
                 m_DialogueManager.SetNewDialogue(m_GetCalledOutWrongDialogue);
+
         }
 
         public void AIAddCards(int amount, CardColour colour)
         {
             OnColourSelected(colour);
 
-            if (m_OpponentArmManager != null)
-                m_OpponentArmManager.RaiseArm();
+            //if (m_OpponentArmManager != null)
+            //    m_OpponentArmManager.RaiseArm();
+
             if (m_DialogueManager != null)
-                m_DialogueManager.SetNewDialogue(m_AIAddedItemDialogue, amount, colour);
+                m_DialogueManager.SetNewDialogue(m_AIAddedItemDialogue, amount, colour); //broken - just repeating the number and colour of round 1
         }
 
         public void EndDialogue(bool playerWon)
@@ -440,11 +445,14 @@ namespace Template.Content.Scripts.Managers
                 m_WinLossText.color = playerWon ? Color.green : Color.red;
             }
 
+            StartCoroutine(EndGameDelay());
+
             if (playerWon) //Use for win/loss dialogue
             {
                 if (m_DialogueManager != null)
                     m_DialogueManager.SetNewDialogue(m_WinDialogue);
                 Debug.Log($"[GameManager] Player won the round vs {m_AIProfile.DisplayName}.");
+
             }
             else
             {
@@ -452,6 +460,14 @@ namespace Template.Content.Scripts.Managers
                     m_DialogueManager.SetNewDialogue(m_LoseDialogue);
                 Debug.Log($"[GameManager] Player lost the round vs {m_AIProfile.DisplayName}.");
             }
+        }
+
+        private IEnumerator EndGameDelay()
+        {
+            yield return new WaitForSeconds(8f);
+
+            SceneManager.LoadScene("MainMenu");
+
         }
 
         private void Start()

@@ -65,41 +65,47 @@ namespace Template.Content.Scripts.Card.Fsm.States
             {
                 Debug.Log(
                     $"[CardRound] opponent call urge = {urge:0.00}, challenged = {m_Board.LastPlayWasChallenged}");
-                if (GameManager.Instance != null && GameManager.Instance.m_OpponentArmManager != null)
-                    GameManager.Instance.m_OpponentArmManager.RevealItem();
+                if (GameManager.Instance != null && GameManager.Instance.m_OpponentArmManager != null) ;
+                //GameManager.Instance.m_OpponentArmManager.RevealItem();
+
+                GameManager.Instance.m_PlayerArmManager.RevealItem();
             }
             else
             {
                 Debug.Log(
                     $"[CardRound] opponent call urge = {urge:0.00}, {m_Board.GetOpponentLabel()} passed on Player's play");
-                if (GameManager.Instance != null && GameManager.Instance.m_OpponentArmManager != null)
-                    GameManager.Instance.m_OpponentArmManager.DropItem();
+                if (GameManager.Instance != null && GameManager.Instance.m_OpponentArmManager != null) ;
+                //GameManager.Instance.m_OpponentArmManager.DropItem();
+
+                GameManager.Instance.m_PlayerArmManager.DropItem();
             }
 
-            yield return new WaitForSeconds(0.3f);
+            yield return new WaitForSeconds(3);
 
             m_Fsm.SetState(new ResolveState(m_Fsm, m_Board));
         }
 
-        public void Challenge()
+        public void Challenge() // Player challenges opponent's play
         {
             Debug.Log($"[CardRound] React.Challenge");
             m_Board.LastPlayWasChallenged = true;
             m_Fsm.SetState(new ResolveState(m_Fsm, m_Board));
 
-            if (GameManager.Instance != null && GameManager.Instance.m_PlayerArmManager != null)
-                GameManager.Instance.m_PlayerArmManager.RevealItem();
+            if (GameManager.Instance != null && GameManager.Instance.m_PlayerArmManager != null) ;
+                //GameManager.Instance.m_PlayerArmManager.RevealItem();
         }
 
-        public void Pass()
+        public void Pass() // Player passes on opponent's play
         {
             Debug.Log($"[CardRound] React.Pass");
 
             m_Board.LastPlayWasChallenged = false;
             m_Fsm.SetState(new ResolveState(m_Fsm, m_Board));
 
-            if (GameManager.Instance != null && GameManager.Instance.m_PlayerArmManager != null)
-                GameManager.Instance.m_PlayerArmManager.DropItem();
+            //GameManager.Instance.m_PlayerArmManager.DropItem();
+
+            if (GameManager.Instance != null && GameManager.Instance.m_PlayerArmManager != null) ;
+                //GameManager.Instance.m_PlayerArmManager.DropItem();
         }
 
         public void Exit()

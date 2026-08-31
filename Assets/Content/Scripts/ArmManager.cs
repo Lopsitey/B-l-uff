@@ -26,51 +26,23 @@ namespace Template
         public void RaiseArm()
         {
             if (animator != null) animator.SetTrigger("Raise");
+
+            Debug.Log($"[ArmManager] RaiseArm");
         }
 
         public void DropItem()
         {
             if (animator != null) animator.SetTrigger("Drop");
+
+            Debug.Log($"[ArmManager] DropItem");
         }
 
         public void RevealItem()
         {
             if (animator != null) animator.SetTrigger("Reveal");
+
+            Debug.Log($"[ArmManager] RevealItem");
         }
 
-        public void ErrorJiggle()
-        {
-            var startPos = transform.localPosition;
-
-            if (m_JiggleCoroutine != null)
-                StopCoroutine(m_JiggleCoroutine);
-
-            m_JiggleCoroutine = StartCoroutine(JiggleRoutine(startPos));
-        }
-
-        private IEnumerator JiggleRoutine(Vector3 startPos)
-        {
-            var upPos = startPos + new Vector3(0f, 0.75f, 0f);
-            var duration = 0.12f;
-            var elapsed = 0f;
-
-            while (elapsed < duration)
-            {
-                elapsed += Time.deltaTime;
-                transform.localPosition = Vector3.Lerp(startPos, upPos, elapsed / duration);
-                yield return null;
-            }
-
-            elapsed = 0f;
-            while (elapsed < duration)
-            {
-                elapsed += Time.deltaTime;
-                transform.localPosition = Vector3.Lerp(upPos, startPos, elapsed / duration);
-                yield return null;
-            }
-
-            transform.localPosition = startPos;
-            m_JiggleCoroutine = null;
-        }
     }
 }

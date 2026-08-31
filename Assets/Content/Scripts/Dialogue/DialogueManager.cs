@@ -64,6 +64,8 @@ public class DialogueManager : MonoBehaviour
         if (newDialogueLines == null || newDialogueLines.Count == 0)
             return;
 
+        Debug.Log($" amount={amount}, colour={colour}");
+
         if (typewriterCoroutine != null)
         {
             StopCoroutine(typewriterCoroutine);
@@ -78,12 +80,24 @@ public class DialogueManager : MonoBehaviour
 
         dialogueLines = newDialogueLines;
 
-        foreach (var line in dialogueLines)
+        dialogueLines = new List<DialogueLine>();
+
+        foreach (var originalLine in newDialogueLines)
         {
-            line.text = line.text
-                .Replace("AMOUNT", amount.ToString())
-                .Replace("COLOUR", colour.ToString());
+            DialogueLine newLine = new DialogueLine
+            {
+                character = originalLine.character,
+
+                text = originalLine.text
+                    .Replace("AMOUNT", amount.ToString())
+                    .Replace("COLOUR", colour.ToString()),
+
+                autoplayDelay = originalLine.autoplayDelay
+            };
+
+            dialogueLines.Add(newLine);
         }
+
 
         currentLineIndex = 0;
 
