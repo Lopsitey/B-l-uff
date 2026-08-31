@@ -705,8 +705,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 92.2579, y: -201.87302}
-  m_SizeDelta: {x: 449.1611, y: 140.0604}
+  m_AnchoredPosition: {x: 96.484764, y: -202.84845}
+  m_SizeDelta: {x: 418.5975, y: 118.6009}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &586681757
 CanvasRenderer:
@@ -771,7 +771,7 @@ MonoBehaviour:
   m_fontSizeMax: 72
   m_fontStyle: 0
   m_HorizontalAlignment: 1
-  m_VerticalAlignment: 256
+  m_VerticalAlignment: 512
   m_textAlignment: 65535
   m_characterSpacing: 1
   m_wordSpacing: 0
@@ -869,7 +869,7 @@ SpriteRenderer:
   m_SortingLayer: 0
   m_SortingOrder: -2
   m_Sprite: {fileID: 21300000, guid: e4ee4dda197873c47a963427fbf130a5, type: 3}
-  m_Color: {r: 0.6784314, g: 0.20000002, b: 0.19215688, a: 1}
+  m_Color: {r: 0.2967693, g: 0.41270187, b: 0.5377358, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
@@ -1232,34 +1232,59 @@ MonoBehaviour:
   m_OpponentArmManager: {fileID: 1090152040}
   m_AIProfile: {fileID: 11400000, guid: c6c9f0345511c4044b305bd2cc83fa6d, type: 2}
   m_IntroDialogue:
-  - character: {fileID: 11400000, guid: c2110277ebf30364db303556a4229460, type: 2}
-    text: Welcome to purgatory.
-    autoplayDelay: 0
   - character: {fileID: 11400000, guid: 872fa4e2181e96c438232e8ea095fc69, type: 2}
     text: What am I doing here?
-    autoplayDelay: 2
+    autoplayDelay: 0
   - character: {fileID: 11400000, guid: c2110277ebf30364db303556a4229460, type: 2}
-    text: Beat Death at his game of potion brewing and you will see your daughter
-      again.
-    autoplayDelay: 2
+    text: 'Welcome to the church. '
+    autoplayDelay: 0
   - character: {fileID: 11400000, guid: c2110277ebf30364db303556a4229460, type: 2}
-    text: Add ingredients to the pot, selecting them and choosing a colour from the
-      pentagram.
-    autoplayDelay: 2
+    text: Play masters game and win, and he will bring you to your loved one again.
+    autoplayDelay: 0
   - character: {fileID: 11400000, guid: c2110277ebf30364db303556a4229460, type: 2}
-    text: Take it in turns, adding ingredients, but for the potion to work, their
-      colours must be the same.
-    autoplayDelay: 2
+    text: His prophecy ordained of a potion capable of bringing a person back from
+      the dead.
+    autoplayDelay: 0
   - character: {fileID: 11400000, guid: c2110277ebf30364db303556a4229460, type: 2}
-    text: As well as being next to or the same as the colour from the previous round.
-    autoplayDelay: 2
+    text: 'The recipe follows 7 colours, one for each sin. '
+    autoplayDelay: 0
   - character: {fileID: 11400000, guid: c2110277ebf30364db303556a4229460, type: 2}
-    text: Catch death lying and trick him yourself to reach the end and use all your
-      ingredients.
-    autoplayDelay: 2
+    text: 'To brew the potion, add to the cauldron ingredients which colour matches
+      the water. '
+    autoplayDelay: 0
+  - character: {fileID: 11400000, guid: c2110277ebf30364db303556a4229460, type: 2}
+    text: 'Use the pentagram to change the colour of the cauldron. '
+    autoplayDelay: 0
+  - character: {fileID: 11400000, guid: c2110277ebf30364db303556a4229460, type: 2}
+    text: You can only touch the pentagrams points next to the current colour to
+      play a match.
+    autoplayDelay: 0
+  - character: {fileID: 11400000, guid: c2110277ebf30364db303556a4229460, type: 2}
+    text: Do you understand, lost soul?
+    autoplayDelay: 0
+  - character: {fileID: 11400000, guid: 9b1f7d410f5fa8447865b87aac723d26, type: 2}
+    text: 'I have this in the bag. My mothers end must be reversed. '
+    autoplayDelay: 0
+  - character: {fileID: 11400000, guid: 872fa4e2181e96c438232e8ea095fc69, type: 2}
+    text: Who on earth are you?
+    autoplayDelay: 0
+  - character: {fileID: 11400000, guid: c2110277ebf30364db303556a4229460, type: 2}
+    text: 'Do you really think you are the only person to lose someone? '
+    autoplayDelay: 0
+  - character: {fileID: 11400000, guid: c2110277ebf30364db303556a4229460, type: 2}
+    text: And bringing back someone from the dead is no easy feat. You are going
+      to have to earn this victory...
+    autoplayDelay: 0
+  - character: {fileID: 11400000, guid: c2110277ebf30364db303556a4229460, type: 2}
+    text: Against an opponent...
+    autoplayDelay: 0
+  - character: {fileID: 11400000, guid: c2110277ebf30364db303556a4229460, type: 2}
+    text: Catch him lying and trick him yourself to throw in all your ingredients
+      and brew the potion first.
+    autoplayDelay: 0
   - character: {fileID: 11400000, guid: c2110277ebf30364db303556a4229460, type: 2}
     text: I have faith in you, lost soul.
-    autoplayDelay: 2
+    autoplayDelay: 0
   m_PlayerAddedItemDialogue:
   - character: {fileID: 11400000, guid: 872fa4e2181e96c438232e8ea095fc69, type: 2}
     text: Demon, here is AMOUNT COLOUR ingredients!
@@ -2771,7 +2796,7 @@ Transform:
   m_GameObject: {fileID: 1570563432}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -32.2, y: 11.2, z: 0}
+  m_LocalPosition: {x: -28.1, y: 11.2, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
