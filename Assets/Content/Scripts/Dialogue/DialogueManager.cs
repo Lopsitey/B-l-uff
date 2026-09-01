@@ -1,7 +1,9 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq.Expressions;
 using Template.Content.Scripts.Card.Data;
+using Template.Content.Scripts.Managers;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -54,10 +56,14 @@ public class DialogueManager : MonoBehaviour
     private float lastClosedTime = -1f;
     private int lastAdvanceFrame = -1;
 
+    [SerializeField] private GameObject challengePanel;
+
     public bool IsDialogueActive => dialogueActive;
     public bool WasDialogueActiveRecently => dialogueActive || Time.frameCount == lastClosedFrame || (Time.unscaledTime - lastClosedTime < 0.2f);
 
     private TMP_Text currentText;
+
+    private bool challengeTriggered = false;
 
     public void SetNewDialogue(List<DialogueLine> newDialogueLines, int amount, CardColour colour)
     {
@@ -98,6 +104,11 @@ public class DialogueManager : MonoBehaviour
             dialogueLines.Add(newLine);
         }
 
+        if (newDialogueLines[newDialogueLines.Count-1].autoplayDelay == 2.1f)
+        {
+            challengeTriggered = true;
+            Debug.Log("Adding the trigger !!!!!!!!!!!!!!!");
+        }
 
         currentLineIndex = 0;
 
@@ -285,6 +296,19 @@ public class DialogueManager : MonoBehaviour
         }
 
         isTyping = false;
+
+    }
+
+    public void passButton()
+    {
+        challengePanel.SetActive(false);
+        GameManager.Instance.PlayerPass();
+    }
+
+    public void challengeButton()
+    {
+        challengePanel.SetActive(false);
+        GameManager.Instance.ChallengeOpponent();
     }
 
     private IEnumerator AutoAdvanceAfterDelay(float delay)
@@ -298,6 +322,7 @@ public class DialogueManager : MonoBehaviour
     {
         if (playerPanel != null) playerPanel.SetActive(false);
         if (enemyPanel != null) enemyPanel.SetActive(false);
+        //if (challengePanel != null) challengePanel.SetActive(false);
     }
 
     private void EndDialogue()
@@ -323,6 +348,16 @@ public class DialogueManager : MonoBehaviour
 
         if (DialogueBox != null)
             DialogueBox.SetActive(false);
+
+        if (challengeTriggered)
+        {
+            challengeTriggered = false;
+            if (challengePanel != null)
+                challengePanel.SetActive(true);
+
+            Debug.Log("ENEMY DID CHALLENGE");
+        }
+
     }
 
     private void ToggleDialogueBox() 

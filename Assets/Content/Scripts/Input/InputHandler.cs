@@ -51,27 +51,27 @@ namespace Template.Content.Scripts.Input
 
         private void OnClickPerformed(InputAction.CallbackContext context)
         {
-            var gm = GameManager.Instance;
-            if (gm == null) return;
+            //var gm = GameManager.Instance;
+            //if (gm == null) return;
 
 
-            if (gm.CurrentState is ReactState && gm.ActiveTurn == TurnUser.Opponent)
-            {
-                gm.PlayerPass();
-            }
+            //if (gm.CurrentState is ReactState && gm.ActiveTurn == TurnUser.Opponent)
+            //{
+            //    gm.PlayerPass();
+            //}
         }
 
         private void OnRightClickPerformed(InputAction.CallbackContext context)
         {
-            var gm = GameManager.Instance;
-            if (gm == null) return;
+            //var gm = GameManager.Instance;
+            //if (gm == null) return;
 
-            // Allow right-click challenge even if dialogue is displaying the opponent's dialogue
-            if (gm.CurrentState is ReactState && gm.ActiveTurn == TurnUser.Opponent)
-            {
-                gm.ChallengeOpponent();
-                return;
-            }
+            //// Allow right-click challenge even if dialogue is displaying the opponent's dialogue
+            //if (gm.CurrentState is ReactState && gm.ActiveTurn == TurnUser.Opponent)
+            //{
+            //    gm.ChallengeOpponent();
+            //    return;
+            //}
 
         }
     }

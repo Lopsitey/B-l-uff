@@ -55,14 +55,17 @@ namespace Template.Content.Scripts.Managers
 
         [Header("Dialogue")] [SerializeField] private List<DialogueLine> m_IntroDialogue;
         [SerializeField] private List<DialogueLine> m_PlayerAddedItemDialogue;
-        [SerializeField] private List<DialogueLine> m_AIAddedItemDialogue;
+        public List<DialogueLine> m_AIAddedItemDialogue;
         [SerializeField] private List<DialogueLine> m_CallOutWrongDialogue;
         [SerializeField] private List<DialogueLine> m_CallOutCorrectDialogue;
         [SerializeField] private List<DialogueLine> m_GetCalledOutWrongDialogue;
         [SerializeField] private List<DialogueLine> m_GetCalledOutCorrectDialogue;
         [SerializeField] private List<DialogueLine> m_WinDialogue;
         [SerializeField] private List<DialogueLine> m_LoseDialogue;
-        [SerializeField] public List<DialogueLine> m_DecidingDialogue;
+        public List<DialogueLine> m_DecidingDialogue;
+        [SerializeField] private List<DialogueLine> m_AIPass;                         //             havent hooked up yet
+        [SerializeField] private List<DialogueLine> m_AIChallenge;                //             havent hooked up yet
+
 
         [Header("Win / Loss UI")] [SerializeField]
         private TMP_Text m_WinLossText;
@@ -333,7 +336,7 @@ namespace Template.Content.Scripts.Managers
             Debug.Log(m_PlayerAddedItemDialogue);
 
             if (m_DialogueManager != null && m_PlayerAddedItemDialogue != null && m_PlayerAddedItemDialogue.Count > 0)
-                m_DialogueManager.SetNewDialogue(m_PlayerAddedItemDialogue, m_SelectedCards.Count, m_SelectedColour);    //broken - just repeating the number and colour of round 1
+                m_DialogueManager.SetNewDialogue(m_PlayerAddedItemDialogue, m_SelectedCards.Count, m_SelectedColour);   
 
             yield return new WaitForSeconds(0.1f);
 
@@ -432,8 +435,9 @@ namespace Template.Content.Scripts.Managers
             //    m_OpponentArmManager.RaiseArm();
 
             if (m_DialogueManager != null)
-                m_DialogueManager.SetNewDialogue(m_AIAddedItemDialogue, amount, colour); //broken - just repeating the number and colour of round 1
+                m_DialogueManager.SetNewDialogue(m_AIAddedItemDialogue, amount, colour);
         }
+
 
         public void EndDialogue(bool playerWon)
         {
