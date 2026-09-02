@@ -405,12 +405,12 @@ namespace Template.Content.Scripts.Managers
 
         public void AIChallenge()
         {
-            //not needed?
+            m_DialogueManager.SetNewDialogue(m_AIChallenge);
         }
 
         public void AIPass()
         {
-
+            m_DialogueManager.SetNewDialogue(m_AIPass);
 
         }
 

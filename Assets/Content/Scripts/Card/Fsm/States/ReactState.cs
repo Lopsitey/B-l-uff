@@ -68,12 +68,16 @@ namespace Template.Content.Scripts.Card.Fsm.States
                 if (GameManager.Instance != null && GameManager.Instance.m_OpponentArmManager != null) ;
                 //GameManager.Instance.m_OpponentArmManager.RevealItem();
 
+                GameManager.Instance.AIChallenge();
+
                 GameManager.Instance.m_PlayerArmManager.RevealItem();
             }
             else
             {
                 Debug.Log(
                     $"[CardRound] opponent call urge = {urge:0.00}, {m_Board.GetOpponentLabel()} passed on Player's play");
+
+                GameManager.Instance.AIPass();
                 if (GameManager.Instance != null && GameManager.Instance.m_OpponentArmManager != null) ;
                 //GameManager.Instance.m_OpponentArmManager.DropItem();
 

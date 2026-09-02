@@ -1565,7 +1565,7 @@ MonoBehaviour:
   - character: {fileID: 11400000, guid: 9b1f7d410f5fa8447865b87aac723d26, type: 2}
     text: My turn! I have added AMOUNT COLOUR ingredients .
     autoplayDelay: 2
-  - character: {fileID: 11400000, guid: c2110277ebf30364db303556a4229460, type: 2}
+  - character: {fileID: 11400000, guid: 9b1f7d410f5fa8447865b87aac723d26, type: 2}
     text: Was I telling the TRUTH or a LIE?
     autoplayDelay: 2.1
   m_CallOutWrongDialogue:
@@ -1623,8 +1623,14 @@ MonoBehaviour:
   - character: {fileID: 11400000, guid: 872fa4e2181e96c438232e8ea095fc69, type: 2}
     text: Hmmm what should i choose...
     autoplayDelay: 4
-  m_AIPass: []
-  m_AIChallenge: []
+  m_AIPass:
+  - character: {fileID: 11400000, guid: 9b1f7d410f5fa8447865b87aac723d26, type: 2}
+    text: Hmmmm. If you say so...
+    autoplayDelay: 2
+  m_AIChallenge:
+  - character: {fileID: 11400000, guid: 9b1f7d410f5fa8447865b87aac723d26, type: 2}
+    text: I smell... A LIE
+    autoplayDelay: 2
   m_WinLossText: {fileID: 1901630484}
   m_ItemPrefab: {fileID: 8809188124523310579, guid: 81d513c505cd4b94eb755794956cb2de, type: 3}
   waterSpriteRenderer: {fileID: 629482087}
@@ -2328,6 +2334,7 @@ GameObject:
   - component: {fileID: 1090152042}
   - component: {fileID: 1090152041}
   - component: {fileID: 1090152040}
+  - component: {fileID: 1090152044}
   - component: {fileID: 1090152043}
   m_Layer: 0
   m_Name: Enemy arm
@@ -2412,13 +2419,110 @@ Transform:
   m_GameObject: {fileID: 1090152038}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -106, y: 39.1, z: 0}
-  m_LocalScale: {x: -1, y: -1, z: 0.28405}
+  m_LocalPosition: {x: -24.7, y: 37.2, z: 0}
+  m_LocalScale: {x: -1, y: -1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!95 &1090152043
+--- !u!82 &1090152043
+AudioSource:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1090152038}
+  m_Enabled: 0
+  serializedVersion: 4
+  OutputAudioMixerGroup: {fileID: 0}
+  m_audioClip: {fileID: 0}
+  m_Resource: {fileID: 8300000, guid: 352ba2dce7921754c850becfc898cf76, type: 3}
+  m_PlayOnAwake: 1
+  m_Volume: 1
+  m_Pitch: 1
+  Loop: 0
+  Mute: 0
+  Spatialize: 0
+  SpatializePostEffects: 0
+  Priority: 128
+  DopplerLevel: 1
+  MinDistance: 1
+  MaxDistance: 500
+  Pan2D: 0
+  rolloffMode: 0
+  BypassEffects: 0
+  BypassListenerEffects: 0
+  BypassReverbZones: 0
+  rolloffCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    - serializedVersion: 3
+      time: 1
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  panLevelCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  spreadCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  reverbZoneMixCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+--- !u!95 &1090152044
 Animator:
   serializedVersion: 7
   m_ObjectHideFlags: 0
@@ -2426,12 +2530,12 @@ Animator:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1090152038}
-  m_Enabled: 0
+  m_Enabled: 1
   m_Avatar: {fileID: 0}
-  m_Controller: {fileID: 9100000, guid: 602d604bd47b2f8458f8d8a620cdfb01, type: 2}
+  m_Controller: {fileID: 9100000, guid: 266284b80eb8f314699b06192a091d04, type: 2}
   m_CullingMode: 0
   m_UpdateMode: 0
-  m_ApplyRootMotion: 1
+  m_ApplyRootMotion: 0
   m_LinearVelocityBlending: 0
   m_StabilizeFeet: 0
   m_AnimatePhysics: 0

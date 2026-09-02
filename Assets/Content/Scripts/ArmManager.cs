@@ -7,9 +7,6 @@ namespace Template
     {
 
         private Animator animator;
-        private Coroutine m_JiggleCoroutine;
-        private Vector3 m_OriginalPos;
-        private bool m_HasOriginalPos;
 
         private void Awake()
         {
