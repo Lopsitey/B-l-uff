@@ -65,6 +65,16 @@ public class DialogueManager : MonoBehaviour
 
     private bool challengeTriggered = false;
 
+    private AudioSource audioSource;
+
+    private void Awake()
+    {
+        audioSource = this.gameObject.AddComponent<AudioSource>();
+
+    }
+
+
+
     public void SetNewDialogue(List<DialogueLine> newDialogueLines, int amount, CardColour colour)
     {
         if (newDialogueLines == null || newDialogueLines.Count == 0)
@@ -254,10 +264,23 @@ public class DialogueManager : MonoBehaviour
 
             int characterCount = DialogueText.textInfo.characterCount;
 
+            SO_Characters currentCharacter = dialogueLines[currentLineIndex].character;
+
             yield return new WaitForSeconds(0.15f);
+
             for (int i = 0; i <= characterCount; i++)
             {
                 DialogueText.maxVisibleCharacters = i;
+
+                if (DialogueText.maxVisibleCharacters % currentCharacter.frequencyLevel == 0 || DialogueText.maxVisibleCharacters == 0)  //sound plays every three characters
+                {
+                    int randomIndex = UnityEngine.Random.Range(0, currentCharacter.dialogueSFXs.Length);
+                    AudioClip soundClip = currentCharacter.dialogueSFXs[randomIndex];
+                    //audioSource.Stop();   //might not want to stop it
+                    audioSource.pitch = UnityEngine.Random.Range(currentCharacter.minPitch, currentCharacter.maxPitch);
+                    audioSource.PlayOneShot(soundClip);
+                }
+
 
                 yield return new WaitForSeconds(
                     1f / charactersPerSecond

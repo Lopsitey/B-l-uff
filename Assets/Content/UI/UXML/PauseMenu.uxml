@@ -8,18 +8,11 @@
             <ui:Button name="MainMenuButton" text="Main menu" class="menu-button" style="background-color: rgba(70, 110, 180, 0); border-left-color: rgba(149, 149, 149, 0); border-right-color: rgba(149, 149, 149, 0); border-top-color: rgba(149, 149, 149, 0); border-bottom-color: rgba(149, 149, 149, 0); font-size: 25px;" />
             <ui:Button name="PauseQuitButton" text="Quit" class="menu-button menu-button-danger" style="background-color: rgba(70, 110, 180, 0); border-left-color: rgba(149, 149, 149, 0); border-right-color: rgba(149, 149, 149, 0); border-top-color: rgba(149, 149, 149, 0); border-bottom-color: rgba(149, 149, 149, 0); font-size: 25px;" />
         </ui:VisualElement>
-        <ui:VisualElement name="PauseSettingsPanel" class="menu-panel menu-panel-hidden pause-panel">
-            <ui:Label text="Settings" class="menu-title" />
-            <ui:Label text="Master volume" class="menu-label" />
+        <ui:VisualElement name="PauseSettingsPanel" class="menu-panel menu-panel-hidden pause-panel" style="border-left-color: rgb(255, 255, 255); border-right-color: rgb(255, 255, 255); border-top-color: rgb(255, 255, 255); border-bottom-color: rgb(255, 255, 255); border-top-left-radius: 1px; border-top-right-radius: 1px; border-bottom-right-radius: 1px; border-bottom-left-radius: 1px; background-color: rgb(0, 0, 0);">
+            <ui:Label text="Settings" class="menu-title" style="font-size: 40px; -unity-font-style: normal;" />
+            <ui:Label text="Master volume" class="menu-label" style="font-size: 25px; color: rgb(255, 255, 255);" />
             <ui:Slider name="PauseMasterVolumeSlider" low-value="0" high-value="1" value="0.5" />
-            <ui:Button name="PauseSettingsBackButton" text="Back" class="menu-button" />
-        </ui:VisualElement>
-        <ui:VisualElement name="PauseControlsPanel" class="menu-panel menu-panel-hidden pause-panel">
-            <ui:Label text="Controls" class="menu-title" />
-            <ui:Label text="Move: WASD / Arrow keys" class="menu-label" />
-            <ui:Label text="Pause: Escape" class="menu-label" />
-            <ui:Label text="Confirm: Enter / Left click" class="menu-label" />
-            <ui:Button name="PauseControlsBackButton" text="Back" class="menu-button" />
+            <ui:Button name="PauseSettingsBackButton" text="Back" class="menu-button" style="background-color: rgba(70, 110, 180, 0); border-left-color: rgba(149, 149, 149, 0); border-right-color: rgba(149, 149, 149, 0); border-top-color: rgba(149, 149, 149, 0); border-bottom-color: rgba(149, 149, 149, 0); font-size: 25px;" />
         </ui:VisualElement>
     </ui:VisualElement>
 </ui:UXML>

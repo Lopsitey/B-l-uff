@@ -439,6 +439,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   cardColour: 1
   waterSpriteRenderer: {fileID: 629482087}
+  waterSound: {fileID: 8300000, guid: a87301c2d2cb2454d87a7f23d533b52d, type: 3}
 --- !u!61 &262420608
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -595,6 +596,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   cardColour: 6
   waterSpriteRenderer: {fileID: 629482087}
+  waterSound: {fileID: 8300000, guid: a87301c2d2cb2454d87a7f23d533b52d, type: 3}
 --- !u!61 &368579557
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -1211,6 +1213,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   cardColour: 3
   waterSpriteRenderer: {fileID: 629482087}
+  waterSound: {fileID: 8300000, guid: a87301c2d2cb2454d87a7f23d533b52d, type: 3}
 --- !u!61 &659347732
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -1542,32 +1545,31 @@ MonoBehaviour:
     text: 'Do you really think you are the only person to lose someone? '
     autoplayDelay: 0
   - character: {fileID: 11400000, guid: c2110277ebf30364db303556a4229460, type: 2}
-    text: And bringing back someone from the dead is no easy feat. You are going
-      to have to earn this victory...
-    autoplayDelay: 0
+    text: 'Your loved ones will be counting on you to win the competiton! '
+    autoplayDelay: 2
   - character: {fileID: 11400000, guid: c2110277ebf30364db303556a4229460, type: 2}
     text: Against an opponent...
     autoplayDelay: 0
   - character: {fileID: 11400000, guid: c2110277ebf30364db303556a4229460, type: 2}
-    text: Catch him lying and trick him yourself to throw in all your ingredients
-      and brew the potion first.
+    text: Catch them lying or trick them yourself to get ahead and finish brewing
+      the potion first.
     autoplayDelay: 0
   - character: {fileID: 11400000, guid: c2110277ebf30364db303556a4229460, type: 2}
     text: I have faith in you, lost soul.
     autoplayDelay: 0
   m_PlayerAddedItemDialogue:
   - character: {fileID: 11400000, guid: 872fa4e2181e96c438232e8ea095fc69, type: 2}
-    text: Demon, here is AMOUNT COLOUR ingredients!
+    text: I am going to add AMOUNT COLOUR ingredients! Believe me?
     autoplayDelay: 2
   m_AIAddedItemDialogue:
-  - character: {fileID: 11400000, guid: 916d8ef55cedd704288bd958ba5ac51c, type: 2}
-    text: I have added AMOUNT COLOUR ingredients mortal.
+  - character: {fileID: 11400000, guid: 9b1f7d410f5fa8447865b87aac723d26, type: 2}
+    text: My turn! I have added AMOUNT COLOUR ingredients .
     autoplayDelay: 2
-  - character: {fileID: 11400000, guid: 916d8ef55cedd704288bd958ba5ac51c, type: 2}
+  - character: {fileID: 11400000, guid: c2110277ebf30364db303556a4229460, type: 2}
     text: Was I telling the TRUTH or a LIE?
     autoplayDelay: 2.1
   m_CallOutWrongDialogue:
-  - character: {fileID: 11400000, guid: 916d8ef55cedd704288bd958ba5ac51c, type: 2}
+  - character: {fileID: 11400000, guid: 9b1f7d410f5fa8447865b87aac723d26, type: 2}
     text: Haha, you fool!
     autoplayDelay: 0
   - character: {fileID: 11400000, guid: 872fa4e2181e96c438232e8ea095fc69, type: 2}
@@ -1577,41 +1579,52 @@ MonoBehaviour:
   - character: {fileID: 11400000, guid: 872fa4e2181e96c438232e8ea095fc69, type: 2}
     text: Who's laughing now?
     autoplayDelay: 0
-  - character: {fileID: 11400000, guid: 916d8ef55cedd704288bd958ba5ac51c, type: 2}
-    text: NOOO!
+  - character: {fileID: 11400000, guid: 9b1f7d410f5fa8447865b87aac723d26, type: 2}
+    text: Please. Mother will be so dissapointed...
     autoplayDelay: 2
   m_GetCalledOutWrongDialogue:
-  - character: {fileID: 11400000, guid: 916d8ef55cedd704288bd958ba5ac51c, type: 2}
-    text: Clever mortal!
+  - character: {fileID: 11400000, guid: 9b1f7d410f5fa8447865b87aac723d26, type: 2}
+    text: Urghh. You got me.
     autoplayDelay: 0
   - character: {fileID: 11400000, guid: 872fa4e2181e96c438232e8ea095fc69, type: 2}
-    text: I thought you were a meant to be god.
+    text: I'm sorry. My daughter needs me.
     autoplayDelay: 2
   m_GetCalledOutCorrectDialogue:
-  - character: {fileID: 11400000, guid: 916d8ef55cedd704288bd958ba5ac51c, type: 2}
-    text: You can't decieve a god!
+  - character: {fileID: 11400000, guid: 9b1f7d410f5fa8447865b87aac723d26, type: 2}
+    text: Really thought you could trick me?
     autoplayDelay: 0
   - character: {fileID: 11400000, guid: 872fa4e2181e96c438232e8ea095fc69, type: 2}
-    text: We'll see about that...
+    text: Worth a try.
     autoplayDelay: 2
   m_WinDialogue:
-  - character: {fileID: 11400000, guid: 916d8ef55cedd704288bd958ba5ac51c, type: 2}
-    text: "Well done puny human.\t"
+  - character: {fileID: 11400000, guid: 9b1f7d410f5fa8447865b87aac723d26, type: 2}
+    text: How could I have lost! Mother. I will find a way to bring you back!
     autoplayDelay: 0
   - character: {fileID: 11400000, guid: 872fa4e2181e96c438232e8ea095fc69, type: 2}
-    text: My daughter is saved!
+    text: Not today you won't. My daughter is saved!
     autoplayDelay: 2
   m_LoseDialogue:
-  - character: {fileID: 11400000, guid: 916d8ef55cedd704288bd958ba5ac51c, type: 2}
-    text: Another soul for the damned.
+  - character: {fileID: 11400000, guid: 9b1f7d410f5fa8447865b87aac723d26, type: 2}
+    text: Haha your attempt was pathetic. You deserve to take mothers place!
     autoplayDelay: 0
   - character: {fileID: 11400000, guid: 872fa4e2181e96c438232e8ea095fc69, type: 2}
-    text: I don't deserve this!
-    autoplayDelay: 2
+    text: What...
+    autoplayDelay: 1
+  - character: {fileID: 11400000, guid: 872fa4e2181e96c438232e8ea095fc69, type: 2}
+    text: I never agreed to that!
+    autoplayDelay: 1
+  - character: {fileID: 11400000, guid: 916d8ef55cedd704288bd958ba5ac51c, type: 2}
+    text: Haha mortal. You thought you could play without a price?
+    autoplayDelay: 1
+  - character: {fileID: 11400000, guid: 916d8ef55cedd704288bd958ba5ac51c, type: 2}
+    text: Atleast you may be with your daughter again. In my domain.
+    autoplayDelay: 1
   m_DecidingDialogue:
   - character: {fileID: 11400000, guid: 872fa4e2181e96c438232e8ea095fc69, type: 2}
     text: Hmmm what should i choose...
     autoplayDelay: 4
+  m_AIPass: []
+  m_AIChallenge: []
   m_WinLossText: {fileID: 1901630484}
   m_ItemPrefab: {fileID: 8809188124523310579, guid: 81d513c505cd4b94eb755794956cb2de, type: 3}
   waterSpriteRenderer: {fileID: 629482087}
@@ -1665,6 +1678,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 167032115}
+  - {fileID: 2090601049}
   - {fileID: 862599298}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -2192,6 +2206,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   cardColour: 0
   waterSpriteRenderer: {fileID: 629482087}
+  waterSound: {fileID: 8300000, guid: a87301c2d2cb2454d87a7f23d533b52d, type: 3}
 --- !u!61 &1044359084
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -2536,6 +2551,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   cardColour: 2
   waterSpriteRenderer: {fileID: 629482087}
+  waterSound: {fileID: 8300000, guid: a87301c2d2cb2454d87a7f23d533b52d, type: 3}
 --- !u!61 &1166834427
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -2644,6 +2660,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   cardColour: 5
   waterSpriteRenderer: {fileID: 629482087}
+  waterSound: {fileID: 8300000, guid: a87301c2d2cb2454d87a7f23d533b52d, type: 3}
 --- !u!61 &1178446385
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -2702,6 +2719,7 @@ GameObject:
   - component: {fileID: 1185445240}
   - component: {fileID: 1185445239}
   - component: {fileID: 1185445242}
+  - component: {fileID: 1185445243}
   m_Layer: 0
   m_Name: arm
   m_TagString: Untagged
@@ -2814,6 +2832,103 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
+--- !u!82 &1185445243
+AudioSource:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1185445238}
+  m_Enabled: 0
+  serializedVersion: 4
+  OutputAudioMixerGroup: {fileID: 0}
+  m_audioClip: {fileID: 0}
+  m_Resource: {fileID: 8300000, guid: 352ba2dce7921754c850becfc898cf76, type: 3}
+  m_PlayOnAwake: 1
+  m_Volume: 0.779
+  m_Pitch: 0.66
+  Loop: 0
+  Mute: 0
+  Spatialize: 0
+  SpatializePostEffects: 0
+  Priority: 128
+  DopplerLevel: 1
+  MinDistance: 1
+  MaxDistance: 500
+  Pan2D: 0
+  rolloffMode: 0
+  BypassEffects: 0
+  BypassListenerEffects: 0
+  BypassReverbZones: 0
+  rolloffCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    - serializedVersion: 3
+      time: 1
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  panLevelCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  spreadCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  reverbZoneMixCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
 --- !u!1 &1191639596
 GameObject:
   m_ObjectHideFlags: 0
@@ -3709,6 +3824,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   cardColour: 4
   waterSpriteRenderer: {fileID: 629482087}
+  waterSound: {fileID: 8300000, guid: a87301c2d2cb2454d87a7f23d533b52d, type: 3}
 --- !u!61 &1828432436
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -4228,6 +4344,53 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2064430812}
   m_CullTransparentMesh: 1
+--- !u!1 &2090601048
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 2090601049}
+  - component: {fileID: 2090601050}
+  m_Layer: 0
+  m_Name: AudioManager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 0
+--- !u!4 &2090601049
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2090601048}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 909933670}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &2090601050
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2090601048}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bc631ef59278167438430af4658c030f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_MasterVolume: 0.5
+  m_UiClickClip: {fileID: 8300000, guid: 2217cb66111819d4c83f77c5bbd24f6d, type: 3}
+  m_UiHoverClip: {fileID: 8300000, guid: 947c024a306de2c4cab10615d5db5c45, type: 3}
 --- !u!1 &2093539110
 GameObject:
   m_ObjectHideFlags: 0

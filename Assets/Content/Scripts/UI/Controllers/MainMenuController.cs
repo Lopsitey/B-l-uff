@@ -40,12 +40,30 @@ namespace Template.UI.Controllers
 
             ShowPanel(m_View.MainPanel);
 
-            if (m_View.StartButton != null) m_View.StartButton.clicked += OnStartClicked;
-            if (m_View.SettingsButton != null) m_View.SettingsButton.clicked += OnSettingsClicked;
-            if (m_View.ControlsButton != null) m_View.ControlsButton.clicked += OnControlsClicked;
-            if (m_View.QuitButton != null) m_View.QuitButton.clicked += OnQuitClicked;
-            if (m_View.SettingsBackButton != null) m_View.SettingsBackButton.clicked += OnBackToMainClicked;
-            if (m_View.ControlsBackButton != null) m_View.ControlsBackButton.clicked += OnBackToMainClicked;
+            if (m_View.StartButton != null)
+            {
+                m_View.StartButton.clicked += OnStartClicked;
+                m_View.StartButton.RegisterCallback<PointerEnterEvent>(OnButtonHover);
+            }
+
+            if (m_View.SettingsButton != null)
+            {
+                m_View.SettingsButton.clicked += OnSettingsClicked;
+                m_View.SettingsButton.RegisterCallback<PointerEnterEvent>(OnButtonHover);
+            }
+
+            if (m_View.QuitButton != null)
+            {
+                m_View.QuitButton.clicked += OnQuitClicked;
+                m_View.QuitButton.RegisterCallback<PointerEnterEvent>(OnButtonHover);
+            }
+
+            if (m_View.SettingsBackButton != null)
+            {
+                m_View.SettingsBackButton.clicked += OnBackToMainClicked;
+                m_View.SettingsBackButton.RegisterCallback<PointerEnterEvent>(OnButtonHover);
+            }
+
         }
 
         private void OnDestroy()
@@ -55,19 +73,35 @@ namespace Template.UI.Controllers
                 return;
             }
 
-            if (m_View.StartButton != null) m_View.StartButton.clicked -= OnStartClicked;
-            if (m_View.SettingsButton != null) m_View.SettingsButton.clicked -= OnSettingsClicked;
-            if (m_View.ControlsButton != null) m_View.ControlsButton.clicked -= OnControlsClicked;
-            if (m_View.QuitButton != null) m_View.QuitButton.clicked -= OnQuitClicked;
-            if (m_View.SettingsBackButton != null) m_View.SettingsBackButton.clicked -= OnBackToMainClicked;
-            if (m_View.ControlsBackButton != null) m_View.ControlsBackButton.clicked -= OnBackToMainClicked;
+            if (m_View.StartButton != null)
+            {
+                m_View.StartButton.clicked -= OnStartClicked;
+                m_View.StartButton.UnregisterCallback<PointerEnterEvent>(OnButtonHover);
+            }
+
+            if (m_View.SettingsButton != null)
+            {
+                m_View.SettingsButton.clicked -= OnSettingsClicked;
+                m_View.SettingsButton.UnregisterCallback<PointerEnterEvent>(OnButtonHover);
+            }
+
+            if (m_View.QuitButton != null)
+            {
+                m_View.QuitButton.clicked -= OnQuitClicked;
+                m_View.QuitButton.UnregisterCallback<PointerEnterEvent>(OnButtonHover);
+            }
+
+            if (m_View.SettingsBackButton != null)
+            {
+                m_View.SettingsBackButton.clicked -= OnBackToMainClicked;
+                m_View.SettingsBackButton.UnregisterCallback<PointerEnterEvent>(OnButtonHover);
+            }
         }
 
         private void ShowPanel(VisualElement panelToShow)
         {
             SetPanelVisible(m_View.MainPanel, panelToShow == m_View.MainPanel);
             SetPanelVisible(m_View.SettingsPanel, panelToShow == m_View.SettingsPanel);
-            SetPanelVisible(m_View.ControlsPanel, panelToShow == m_View.ControlsPanel);
         }
 
         private static void SetPanelVisible(VisualElement panel, bool visible)
@@ -89,13 +123,18 @@ namespace Template.UI.Controllers
             StartCoroutine(StartupDelay(1f));
         }
 
+        private void OnButtonHover(PointerEnterEvent evt)
+        {
+            AudioManager.Instance?.PlayUIHover();
+        }
+
         private IEnumerator StartupDelay(float seconds)
         {
             yield return new WaitForSeconds(seconds);
             m_cameraCutscene.SetActive(true);
             yield return new WaitForSeconds(seconds);
             m_dialogueManager.GetComponent<DialogueManager>().StartDialogue();
-            yield return new WaitForSeconds(73f);
+            yield return new WaitForSeconds(71f);                            
             SceneManager.LoadScene("CardRound");
         }
 
@@ -104,12 +143,6 @@ namespace Template.UI.Controllers
 
             AudioManager.Instance?.PlayUiClick();
             ShowPanel(m_View.SettingsPanel);
-        }
-
-        private void OnControlsClicked()
-        {
-            AudioManager.Instance?.PlayUiClick();
-            ShowPanel(m_View.ControlsPanel);
         }
 
         private void OnBackToMainClicked()

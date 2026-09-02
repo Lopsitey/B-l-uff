@@ -14,3 +14,14 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   characterName: 0
   characterPortrait: {fileID: -105327064, guid: f367b81a4560a704ea4d713c757588df, type: 3}
+  dialogueSFXs:
+  - {fileID: 8300000, guid: 85349af04c2652d4bb8a593f31a02c5a, type: 3}
+  - {fileID: 8300000, guid: 26211b0cea9cbbf45beccc1d99b0cb54, type: 3}
+  - {fileID: 8300000, guid: d923c5c7daf3af3419f7079c80f5883f, type: 3}
+  - {fileID: 8300000, guid: 7ce375bbb583beb4fbdb5371e422d78c, type: 3}
+  - {fileID: 8300000, guid: 2941f0b9d41a77c408e89dc8fa7bdff8, type: 3}
+  - {fileID: 8300000, guid: 65288125456927646b946a4e7673f83a, type: 3}
+  - {fileID: 8300000, guid: 705d485ec10236543b9180f343eb00b4, type: 3}
+  minPitch: 0.62
+  maxPitch: 0.78
+  frequencyLevel: 3

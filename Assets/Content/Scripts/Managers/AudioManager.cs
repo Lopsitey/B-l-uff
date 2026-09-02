@@ -14,6 +14,7 @@ namespace Template.Managers
 
         [Header("Optional UI clip")] [SerializeField]
         private AudioClip m_UiClickClip;
+        [SerializeField] private AudioClip m_UiHoverClip;
 
         private AudioSource m_SfxSource;
 
@@ -25,7 +26,12 @@ namespace Template.Managers
 
         public void PlayUiClick()
         {
-            PlaySfx(m_UiClickClip, 0.8f);
+            PlaySfx(m_UiClickClip, 1.3f);
+        }
+
+        public void PlayUIHover()
+        {
+            PlaySfx(m_UiHoverClip, 0.5f);
         }
 
         public void PlaySfx(AudioClip clip, float volumeMultiplier = 1f)

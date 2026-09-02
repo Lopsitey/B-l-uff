@@ -8,6 +8,15 @@ public class SO_Characters : ScriptableObject
     public DialogueMode characterName;
     public Sprite characterPortrait;
 
-    [SerializeField] private List<DialogueLine> dialogueLines;
+    public AudioClip[] dialogueSFXs;
+
+    [Range(-3, 3)]
+    public float minPitch = 0.3f;
+    [Range(-3, 3)]
+    public float maxPitch = 3f;
+
+
+    [Range(1, 5)]
+    public int frequencyLevel = 2;
 
 }
