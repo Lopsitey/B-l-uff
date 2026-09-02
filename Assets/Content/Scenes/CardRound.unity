@@ -1560,13 +1560,13 @@ MonoBehaviour:
   m_PlayerAddedItemDialogue:
   - character: {fileID: 11400000, guid: 872fa4e2181e96c438232e8ea095fc69, type: 2}
     text: I am going to add AMOUNT COLOUR ingredients! Believe me?
-    autoplayDelay: 2
+    autoplayDelay: 0
   m_AIAddedItemDialogue:
   - character: {fileID: 11400000, guid: 9b1f7d410f5fa8447865b87aac723d26, type: 2}
     text: My turn! I have added AMOUNT COLOUR ingredients .
-    autoplayDelay: 2
+    autoplayDelay: 0
   - character: {fileID: 11400000, guid: 9b1f7d410f5fa8447865b87aac723d26, type: 2}
-    text: Was I telling the TRUTH or a LIE?
+    text: Was I telling the Truth or a Lie?
     autoplayDelay: 2.1
   m_CallOutWrongDialogue:
   - character: {fileID: 11400000, guid: 9b1f7d410f5fa8447865b87aac723d26, type: 2}
